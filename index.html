@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>moeOS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+:root {
+  --glass: rgba(255,255,255,0.62);
+  --glass-strong: rgba(255,255,255,0.78);
+  --glass-border: rgba(255,255,255,0.45);
+  --glass-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  --text: #1D1D1F;
+  --text2: #6E6E73;
+  --blue: #007AFF;
+  --green: #34C759;
+  --orange: #FF9500;
+  --pink: #FF2D55;
+  --purple: #AF52DE;
+  --teal: #5AC8FA;
+  --red: #FF3B30;
+  --menuH: 28px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: -apple-system,'Inter','Noto Sans JP',BlinkMacSystemFont,sans-serif;
+  overflow: hidden;
+  height: 100vh; width: 100vw;
+  cursor: default;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== WALLPAPER (macOS Big Sur) ===== */
+#desktop {
+  position: fixed; inset: 0;
+  background:
+    linear-gradient(135deg,
+      #E91E76 0%,
+      #F0334A 15%,
+      #F44336 25%,
+      #FF5722 35%,
+      #FF8A50 42%,
+      #FFB74D 48%,
+      #E8D5C4 52%,
+      #BBDEFB 56%,
+      #64B5F6 62%,
+      #2196F3 70%,
+      #1976D2 80%,
+      #1565C0 90%,
+      #0D47A1 100%
+    );
+}
+#desktop::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 120% 70% at 20% 90%, rgba(233,30,99,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 70% 20%, rgba(33,150,243,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 55% 55%, rgba(255,255,255,0.12) 0%, transparent 40%),
+    radial-gradient(ellipse 90% 40% at 40% 60%, rgba(255,87,34,0.3) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+/* ===== MENU BAR ===== */
+#menubar {
+  position:fixed; top:0; left:0; right:0; height:var(--menuH);
+  background: rgba(30,30,30,0.3);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 14px; z-index:10000; color:white; font-size:13px; font-weight:500;
+}
+.mb-left { display:flex; align-items:center; gap:18px; }
+.mb-left span { opacity:0.85; cursor:pointer; }
+.mb-left span:hover { opacity:1; }
+.mb-left .app-name { font-weight:700; opacity:1; }
+.mb-right { display:flex; align-items:center; gap:14px; font-size:12px; opacity:0.85; }
+
+/* ===== DESKTOP ICONS ===== */
+#icons {
+  position:absolute; top: calc(var(--menuH) + 20px); right: 20px;
+  display: flex; flex-direction: column; gap: 4px; z-index:100;
+}
+.dsk-icon {
+  display:flex; flex-direction:column; align-items:center;
+  width: 82px; padding: 8px 4px; border-radius: 8px; cursor: pointer;
+  transition: background 0.12s;
+}
+.dsk-icon:hover { background: rgba(255,255,255,0.18); }
+.dsk-icon .ico { font-size: 48px; margin-bottom: 3px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+.dsk-icon .ico-label {
+  font-size: 11px; color: white; text-align:center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5); font-weight:500; line-height:1.3;
+}
+
+/* macOS Folder Icon */
+.ico-folder {
+  width:52px; height:44px; position:relative; margin-bottom:3px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+.ico-folder .folder-tab {
+  position:absolute; top:0; left:4px;
+  width:20px; height:10px;
+  background: linear-gradient(180deg, #7AC0F8 0%, #5AACF0 100%);
+  border-radius: 4px 4px 0 0;
+}
+.ico-folder .folder-body {
+  position:absolute; top:8px; left:0; right:0; bottom:0;
+  background: linear-gradient(180deg, #80C6FA 0%, #4BA3F0 30%, #3D96E8 100%);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+/* macOS Music Icon */
+.ico-music {
+  width:48px; height:48px; border-radius:12px; margin-bottom:3px;
+  background: linear-gradient(135deg, #FC3C44 0%, #E02D37 100%);
+  display:flex; align-items:center; justify-content:center;
+  color:white; font-size:28px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+/* macOS Photos Icon */
+.ico-photos {
+  width:48px; height:48px; border-radius:12px; margin-bottom:3px;
+  background: white; position:relative; overflow:hidden;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+.ico-photos .ip { position:absolute; width:16px; height:16px; border-radius:50%; }
+.ico-photos .ip1 { background:#FF4F4F; top:7px; left:16px; }
+.ico-photos .ip2 { background:#FF9500; top:13px; left:24px; }
+.ico-photos .ip3 { background:#FFCC00; top:22px; left:22px; }
+.ico-photos .ip4 { background:#34C759; top:26px; left:14px; }
+.ico-photos .ip5 { background:#007AFF; top:21px; left:6px; }
+.ico-photos .ip6 { background:#AF52DE; top:12px; left:6px; }
+.ico-photos .ip7 { background:#FF2D55; top:5px; left:11px; }
+.ico-photos .ipc { position:absolute; width:8px; height:8px; border-radius:50%; background:white; top:17px; left:16px; z-index:1; }
+
+/* macOS Notes Icon */
+/* macOS Claude Icon */
+.ico-claude {
+  width:48px; height:48px; margin-bottom:3px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  border-radius:12px; overflow:hidden;
+}
+
+/* macOS Notes Icon */
+.ico-notes {
+  width:48px; height:48px; position:relative; margin-bottom:3px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+.ico-notes .notes-top {
+  position:absolute; top:0; left:0; right:0; height:14px;
+  background: linear-gradient(180deg, #FDDB4A 0%, #F5C518 100%);
+  border-radius: 8px 8px 0 0;
+}
+.ico-notes .notes-body {
+  position:absolute; top:12px; left:0; right:0; bottom:0;
+  background: linear-gradient(180deg, #FFFEF5 0%, #FAF8EC 100%);
+  border-radius: 0 0 8px 8px;
+  border: 0.5px solid rgba(0,0,0,0.08);
+  display:flex; flex-direction:column; justify-content:center; padding:3px 6px; gap:3px;
+}
+.ico-notes .notes-line {
+  height:1px; background:rgba(0,0,0,0.06); width:100%;
+}
+
+/* ===== WINDOW (macOS) ===== */
+.win {
+  position:absolute; display:none; flex-direction:column;
+  background: var(--glass-strong);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
+  overflow: hidden; z-index:1000;
+}
+.win.show { display:flex; animation: winOpen .25s ease; }
+@keyframes winOpen { from { transform:scale(0.92); opacity:0; } to { transform:scale(1); opacity:1; } }
+
+.win-tb {
+  height:36px; display:flex; align-items:center; padding:0 14px;
+  background: rgba(255,255,255,0.45);
+  border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  cursor:grab; flex-shrink:0;
+}
+.win-tb:active { cursor:grabbing; }
+.tl { display:flex; gap:8px; }
+.tl-dot { width:12px; height:12px; border-radius:50%; cursor:pointer; position:relative; }
+.tl-dot.r { background:#FF5F57; }
+.tl-dot.y { background:#FEBC2E; }
+.tl-dot.g { background:#28C840; }
+.tl-dot.r:hover::after { content:'×'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:rgba(0,0,0,0.5); }
+.win-title { flex:1; text-align:center; font-size:13px; font-weight:600; color:var(--text); margin-right:36px; }
+.win-body {
+  flex:1; overflow-y:auto; padding:0; font-size:13px; color:var(--text); line-height:1.6;
+}
+.win-body::-webkit-scrollbar { width:5px; }
+.win-body::-webkit-scrollbar-thumb { background:rgba(0,0,0,0.12); border-radius:3px; }
+
+/* ===== FINDER ===== */
+.finder-sidebar {
+  width: 150px; background: rgba(0,0,0,0.03);
+  border-right: 0.5px solid rgba(0,0,0,0.06);
+  padding: 12px 0; flex-shrink:0;
+}
+.finder-sidebar .fs-title {
+  font-size:10px; font-weight:600; color:var(--text2);
+  text-transform:uppercase; letter-spacing:0.05em;
+  padding: 4px 14px; margin-bottom:2px;
+}
+.finder-sidebar .fs-item {
+  padding: 5px 14px; font-size:12px; display:flex; align-items:center; gap:6px;
+  cursor:pointer; transition: background 0.1s; color:var(--text);
+}
+.finder-sidebar .fs-item:hover { background:rgba(0,122,255,0.08); }
+.finder-sidebar .fs-item.active { background:rgba(0,122,255,0.12); color:var(--blue); font-weight:500; }
+
+.finder-content {
+  flex:1; padding:16px; overflow-y:auto;
+}
+
+.finder-grid {
+  display:grid; grid-template-columns: repeat(auto-fill, 90px); gap:8px;
+}
+.finder-file {
+  display:flex; flex-direction:column; align-items:center;
+  padding: 8px 4px; border-radius:8px; cursor:pointer;
+  transition: background 0.12s;
+}
+.finder-file:hover { background:rgba(0,122,255,0.08); }
+.finder-file .ff-ico { font-size:40px; margin-bottom:4px; }
+.finder-file .ff-name { font-size:10px; text-align:center; color:var(--text); line-height:1.3; word-break:break-all; }
+
+/* ===== DOCUMENT VIEWER ===== */
+.doc-content {
+  padding: 24px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+}
+.doc-content h1 { font-size:22px; font-weight:700; margin-bottom:16px; letter-spacing:-0.02em; }
+.doc-content h2 { font-size:16px; font-weight:600; margin:20px 0 8px; color:var(--blue); }
+.doc-content p { margin-bottom:12px; }
+.doc-content .tag { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:500; background:rgba(0,122,255,0.08); color:var(--blue); margin:2px 2px; }
+.doc-content .profile-img { width:100px; height:100px; border-radius:20px; overflow:hidden; float:right; margin:0 0 12px 16px; box-shadow:0 4px 12px rgba(0,0,0,0.1); background:#eee; }
+.doc-content .profile-img img { width:100%; height:100%; object-fit:cover; }
+.doc-content .chapter { margin-bottom:20px; padding-bottom:16px; border-bottom:0.5px solid rgba(0,0,0,0.06); }
+.doc-content .chapter:last-child { border-bottom:none; }
+.doc-content .chapter-title { font-size:13px; font-weight:700; color:var(--orange); margin-bottom:6px; }
+.doc-content .emoji-showcase { font-size:28px; letter-spacing:4px; margin:8px 0; }
+.doc-content blockquote { padding:12px 16px; background:rgba(0,0,0,0.02); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; margin:12px 0; font-style:italic; color:var(--text2); }
+
+/* ===== APPLE MUSIC ===== */
+.music-app {
+  background: linear-gradient(180deg, #1A1A1A 0%, #0A0A0A 100%);
+  color: white; height:100%;
+  display:flex; flex-direction:column;
+}
+.music-header {
+  padding:16px 20px 12px; border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.music-header .mh-title { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:#999; margin-bottom:4px; }
+.music-header h2 { font-size:20px; font-weight:700; }
+.music-list { flex:1; overflow-y:auto; }
+.music-track {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 20px; transition:background 0.1s; cursor:pointer;
+}
+.music-track:hover { background:rgba(255,255,255,0.05); }
+.music-track.playing { background:rgba(0,122,255,0.15); }
+.music-track .mt-num { width:20px; text-align:right; font-size:12px; color:#666; }
+.music-track.playing .mt-num { color:var(--blue); }
+.music-track .mt-art { width:40px; height:40px; border-radius:6px; background:#333; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.music-track .mt-info { flex:1; }
+.music-track .mt-name { font-size:14px; font-weight:500; }
+.music-track.playing .mt-name { color:var(--blue); }
+.music-track .mt-artist { font-size:12px; color:#888; }
+.music-track .mt-dur { font-size:12px; color:#666; }
+
+.music-player-bar {
+  padding:12px 20px; border-top:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.03);
+}
+.mpb-info { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.mpb-info .mpb-art { width:32px; height:32px; border-radius:5px; background:#333; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.mpb-info .mpb-title { font-size:12px; font-weight:500; }
+.mpb-info .mpb-artist { font-size:11px; color:#888; }
+.mpb-progress { width:100%; height:3px; background:#333; border-radius:2px; margin-bottom:8px; }
+.mpb-fill { height:100%; width:35%; background:var(--blue); border-radius:2px; }
+.mpb-controls { display:flex; align-items:center; justify-content:center; gap:24px; font-size:16px; }
+.mpb-controls span { opacity:0.7; cursor:pointer; }
+.mpb-controls span:hover { opacity:1; }
+.mpb-controls .play { font-size:22px; opacity:1; }
+
+/* ===== PHOTOS ===== */
+.photos-grid {
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:2px; padding:2px;
+}
+.photo-thumb {
+  aspect-ratio:1; background:#E5E5EA; display:flex; align-items:center; justify-content:center;
+  font-size:32px; cursor:pointer; transition: opacity 0.15s;
+  overflow:hidden;
+}
+.photo-thumb:hover { opacity:0.8; }
+.photo-thumb img { width:100%; height:100%; object-fit:cover; }
+.photos-album-title {
+  padding:12px 16px 8px; font-size:16px; font-weight:700; color:var(--text);
+}
+
+/* ===== TAROT ===== */
+.tarot-app {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  height:100%; padding:24px; text-align:center;
+  background: linear-gradient(180deg, #1A0A2E 0%, #0D0520 100%); color:white;
+}
+.tarot-card {
+  width:120px; height:200px; border-radius:12px;
+  background: linear-gradient(135deg, #2D1B69 0%, #11063A 100%);
+  border:2px solid rgba(175,82,222,0.3);
+  display:flex; align-items:center; justify-content:center;
+  font-size:64px; cursor:pointer;
+  transition: transform 0.6s, box-shadow 0.3s;
+  margin:20px 0;
+  box-shadow: 0 8px 32px rgba(175,82,222,0.2);
+}
+.tarot-card:hover { transform:scale(1.05); box-shadow: 0 12px 40px rgba(175,82,222,0.35); }
+.tarot-card.flipped { transform: rotateY(180deg); }
+.tarot-title { font-size:18px; font-weight:600; margin-bottom:8px; }
+.tarot-sub { font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:16px; }
+.tarot-result { font-size:14px; line-height:1.6; margin-top:16px; max-width:280px; }
+.tarot-result .tr-name { font-size:18px; font-weight:700; color:var(--purple); margin-bottom:4px; }
+.tarot-btn {
+  margin-top:16px; padding:8px 24px; border-radius:20px;
+  background:var(--purple); color:white; border:none; font-size:13px; font-weight:600;
+  cursor:pointer; transition: background 0.15s;
+}
+.tarot-btn:hover { background:#9B30FF; }
+
+/* ===== NOTES (macOS style) ===== */
+.notes-app {
+  background:#FAF8F0; height:100%; display:flex;
+}
+.notes-sidebar {
+  width:200px; background:rgba(0,0,0,0.02);
+  border-right:0.5px solid rgba(0,0,0,0.08); overflow-y:auto;
+}
+.notes-sidebar .ns-header {
+  padding:10px 14px; font-size:10px; font-weight:600; color:var(--text2);
+  text-transform:uppercase; letter-spacing:0.04em;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.notes-sidebar .ns-folder {
+  padding:6px 14px; font-size:12px; font-weight:600; color:var(--orange);
+  display:flex; align-items:center; gap:6px;
+}
+.notes-sidebar .ns-item {
+  padding:8px 14px; cursor:pointer; border-bottom:0.5px solid rgba(0,0,0,0.04);
+  transition:background 0.1s;
+}
+.notes-sidebar .ns-item:hover { background:rgba(0,0,0,0.03); }
+.notes-sidebar .ns-item.active { background:rgba(255,204,0,0.12); }
+.notes-sidebar .ns-item .ns-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:1px; }
+.notes-sidebar .ns-item .ns-date { font-size:10px; color:var(--text2); }
+.notes-sidebar .ns-item .ns-preview { font-size:10px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.notes-main {
+  flex:1; padding:20px 24px; overflow-y:auto;
+}
+.notes-main .nm-date { font-size:11px; color:var(--text2); text-align:center; margin-bottom:16px; }
+.notes-main .nm-title { font-size:22px; font-weight:700; color:var(--text); margin-bottom:16px; }
+.notes-main .nm-body { font-size:15px; line-height:1.8; color:var(--text); }
+.notes-main .nm-body p { margin-bottom:10px; }
+.notes-main .nm-quote {
+  font-size:18px; font-style:italic; color:var(--text2); margin:16px 0;
+  padding-left:16px; border-left:3px solid var(--orange);
+}
+.notes-main .nm-body ul { margin:8px 0 8px 20px; }
+.notes-main .nm-body li { margin-bottom:6px; }
+.notes-sidebar-bottom {
+  padding:8px 14px; border-top:0.5px solid rgba(0,0,0,0.06);
+  font-size:11px; color:var(--text2); text-align:center;
+}
+
+/* ===== PHOTO LIGHTBOX ===== */
+#lightbox {
+  position:fixed; inset:0; background:rgba(0,0,0,0.85);
+  z-index:99999; display:none; align-items:center; justify-content:center;
+  cursor:pointer;
+}
+#lightbox.show { display:flex; }
+#lightbox img {
+  max-width:90vw; max-height:85vh; border-radius:8px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5); object-fit:contain;
+}
+#lightbox .lb-close {
+  position:absolute; top:16px; right:20px;
+  color:white; font-size:28px; cursor:pointer; opacity:0.7;
+}
+#lightbox .lb-close:hover { opacity:1; }
+
+/* ===== MINIMIZE (hidden in dock) ===== */
+.win.minimized { display:none !important; }
+
+/* ===== RESIZE HANDLES ===== */
+.win .rz { position:absolute; z-index:10; }
+.win .rz-r { top:0; right:-3px; width:6px; height:100%; cursor:ew-resize; }
+.win .rz-b { bottom:-3px; left:0; width:100%; height:6px; cursor:ns-resize; }
+.win .rz-l { top:0; left:-3px; width:6px; height:100%; cursor:ew-resize; }
+.win .rz-t { top:-3px; left:0; width:100%; height:6px; cursor:ns-resize; }
+.win .rz-br { bottom:-4px; right:-4px; width:12px; height:12px; cursor:nwse-resize; z-index:11; }
+.win .rz-bl { bottom:-4px; left:-4px; width:12px; height:12px; cursor:nesw-resize; z-index:11; }
+.win .rz-tr { top:-4px; right:-4px; width:12px; height:12px; cursor:nesw-resize; z-index:11; }
+.win .rz-tl { top:-4px; left:-4px; width:12px; height:12px; cursor:nwse-resize; z-index:11; }
+
+/* ===== CLAUDE APP ===== */
+.claude-app { display:flex; flex-direction:column; height:100%; background:#FAF9F6; }
+.claude-chat { flex:1; overflow-y:auto; padding:16px 20px; }
+.claude-msgs { max-width:560px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
+.claude-welcome { text-align:center; padding:30px 16px; }
+.claude-welcome-icon { font-size:28px; margin-bottom:12px; }
+.claude-welcome-text { font-size:16px; color:#1A1915; font-weight:400; }
+.claude-suggestions { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:20px; }
+.claude-chip {
+  padding:6px 12px; border-radius:16px; border:1px solid #E5E1DA;
+  background:#FAF9F6; font-size:12px; color:#6B6560; cursor:pointer;
+  font-family:inherit; transition:all 0.12s;
+}
+.claude-chip:hover { border-color:#D4CFC7; background:#F0EDE6; color:#1A1915; }
+.c-msg { display:flex; gap:12px; line-height:1.6; }
+.c-msg-user { justify-content:flex-end; }
+.c-msg-user .c-msg-content {
+  background:#F0EDE6; padding:10px 14px; border-radius:16px;
+  max-width:80%; font-size:14px; color:#1A1915;
+}
+.c-msg-ai { align-items:flex-start; }
+.c-msg-avatar {
+  width:24px; height:24px; border-radius:50%; background:#DA7756;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;
+  font-size:12px; color:white;
+}
+.c-msg-body { flex:1; font-size:14px; color:#1A1915; line-height:1.7; }
+.c-msg-body p { margin-bottom:8px; }
+.c-msg-body p:last-child { margin-bottom:0; }
+.c-msg-body strong { font-weight:600; }
+.c-msg-body ul { margin:4px 0 8px 16px; }
+.c-msg-body li { margin-bottom:3px; }
+.c-msg-body h3 { font-size:13px; font-weight:600; margin:12px 0 4px; }
+.claude-input-area {
+  padding:12px 16px; border-top:1px solid #E5E1DA; background:#FAF9F6;
+}
+.claude-input-box {
+  display:flex; align-items:center; gap:8px;
+  background:white; border:1px solid #D4CFC7; border-radius:20px;
+  padding:8px 12px; transition:border-color 0.15s;
+}
+.claude-input-box:focus-within { border-color:#DA7756; }
+.claude-input {
+  flex:1; border:none; outline:none; font-size:13px; color:#1A1915;
+  font-family:inherit; background:transparent;
+}
+.claude-input::placeholder { color:#A8A29E; }
+.claude-send {
+  width:28px; height:28px; border-radius:50%; border:none;
+  background:#1A1915; color:white; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; font-size:12px;
+  opacity:0.3; transition:opacity 0.15s;
+}
+.claude-send.active { opacity:1; }
+
+/* Claude sidebar */
+.claude-sidebar {
+  width:180px; background:#EBE7DF; border-right:1px solid #E5E1DA;
+  display:flex; flex-direction:column; flex-shrink:0;
+}
+.claude-sb-header {
+  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
+}
+.claude-sb-logo { font-size:13px; font-weight:600; color:#1A1915; display:flex; align-items:center; gap:6px; }
+.claude-sb-new {
+  width:24px; height:24px; border-radius:6px; border:none; background:transparent;
+  cursor:pointer; font-size:16px; color:#6B6560; display:flex; align-items:center; justify-content:center;
+}
+.claude-sb-new:hover { background:#DDD8CE; }
+.claude-sb-chats { flex:1; overflow-y:auto; padding:0 6px; }
+.claude-sb-item {
+  padding:7px 8px; border-radius:6px; font-size:12px; color:#6B6560;
+  cursor:pointer; margin-bottom:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.claude-sb-item:hover { background:#DDD8CE; }
+.claude-sb-item.active { background:#DDD8CE; color:#1A1915; font-weight:500; }
+.claude-sb-footer {
+  padding:8px 12px; border-top:1px solid #E5E1DA;
+  display:flex; align-items:center; gap:8px;
+}
+.claude-sb-avatar {
+  width:24px; height:24px; border-radius:50%; background:#DA7756;
+  display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:600;
+}
+.claude-sb-name { font-size:12px; font-weight:500; color:#1A1915; }
+
+/* ===== DOCK ===== */
+#dock {
+  position:fixed; bottom:8px; left:50%; transform:translateX(-50%);
+  height:64px; display:flex; align-items:center; gap:5px;
+  padding:5px 10px;
+  background:rgba(255,255,255,0.22);
+  backdrop-filter:blur(30px) saturate(180%);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);
+  border:0.5px solid rgba(255,255,255,0.3);
+  border-radius:18px; z-index:9999;
+}
+.dk {
+  width:44px; height:44px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:26px; background:rgba(255,255,255,0.25);
+  box-shadow:0 1px 4px rgba(0,0,0,0.08);
+  cursor:pointer; transition:transform 0.2s; position:relative;
+}
+.dk:hover { transform:translateY(-8px) scale(1.15); }
+.dk .dk-tip {
+  position:absolute; top:-28px;
+  background:rgba(30,30,30,0.85); backdrop-filter:blur(8px);
+  color:white; font-size:11px; font-weight:500;
+  padding:3px 8px; border-radius:5px; white-space:nowrap;
+  opacity:0; pointer-events:none; transition:opacity 0.15s;
+}
+.dk:hover .dk-tip { opacity:1; }
+.dk-sep { width:1px; height:36px; background:rgba(255,255,255,0.2); margin:0 3px; }
+
+/* macOS Dock app icons */
+.dk-music {
+  background: linear-gradient(135deg, #FC3C44 0%, #E02D37 100%);
+  border-radius:11px; position:relative;
+}
+.dk-music::after {
+  content:'♫'; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  color:white; font-size:22px;
+}
+
+.dk-photos {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
+  border-radius:11px; position:relative; overflow:hidden;
+}
+.dk-photos .petal { position:absolute; width:14px; height:14px; border-radius:50%; }
+.dk-photos .petal.p1 { background:#FF4F4F; top:7px; left:15px; }
+.dk-photos .petal.p2 { background:#FF9500; top:12px; left:22px; }
+.dk-photos .petal.p3 { background:#FFCC00; top:20px; left:20px; }
+.dk-photos .petal.p4 { background:#34C759; top:23px; left:12px; }
+.dk-photos .petal.p5 { background:#007AFF; top:18px; left:6px; }
+.dk-photos .petal.p6 { background:#AF52DE; top:10px; left:7px; }
+.dk-photos .petal.p7 { background:#FF2D55; top:6px; left:12px; }
+.dk-photos .petal-center { position:absolute; width:8px; height:8px; border-radius:50%; background:white; top:16px; left:14px; z-index:1; box-shadow:0 0 2px rgba(0,0,0,0.1); }
+
+.dk-folder {
+  background: linear-gradient(180deg, #80C6FA 0%, #4BA3F0 50%, #3D96E8 100%);
+  border-radius:11px; position:relative;
+}
+.dk-folder::before {
+  content:''; position:absolute; top:6px; left:6px;
+  width:14px; height:6px; background:rgba(255,255,255,0.35);
+  border-radius:3px 3px 0 0;
+}
+.dk-folder::after {
+  content:''; position:absolute; top:11px; left:4px; right:4px; bottom:6px;
+  background:rgba(255,255,255,0.2); border-radius:3px;
+}
+
+.dk-notes {
+  background: linear-gradient(180deg, #FDDB4A 30%, #FFFEF5 30%);
+  border-radius:11px; position:relative;
+}
+.dk-notes::after {
+  content:''; position:absolute; top:20px; left:8px; right:8px; bottom:8px;
+  background: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 6px);
+}
+
+.dk-career {
+  background: linear-gradient(135deg, #8B6914 0%, #6B4F10 100%);
+  border-radius:11px; position:relative;
+}
+.dk-career::after {
+  content:'💼'; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+
+.dk-tarot {
+  background: linear-gradient(135deg, #2D1B69 0%, #11063A 100%);
+  border-radius:11px; position:relative;
+}
+.dk-tarot::after {
+  content:'🔮'; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+}
+
+@media(max-width:768px) {
+  #icons { right:8px; }
+  .dsk-icon { width:68px; }
+  .dsk-icon .ico { font-size:38px; }
+}
+</style>
+</head>
+<body>
+
+<div id="desktop"></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <div class="lb-close">✕</div>
+  <img id="lbImg" src="" alt="">
+</div>
+
+<!-- MENU BAR -->
+<div id="menubar">
+  <div class="mb-left">
+    <span class="app-name" style="font-size:15px;"></span>
+    <span class="app-name" id="mbAppName">Finder</span>
+    <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+  </div>
+  <div class="mb-right">
+    <span>☁️</span><span>🔋 100%</span><span id="clock"></span>
+  </div>
+</div>
+
+<!-- DESKTOP ICONS -->
+<div id="icons">
+  <div class="dsk-icon" ondblclick="openFinder('aboutme')">
+    <div class="ico-folder"><div class="folder-tab"></div><div class="folder-body"></div></div>
+    <div class="ico-label">About Me</div>
+  </div>
+  <div class="dsk-icon" ondblclick="openFinder('photos')">
+    <div class="ico-photos"><div class="ip ip1"></div><div class="ip ip2"></div><div class="ip ip3"></div><div class="ip ip4"></div><div class="ip ip5"></div><div class="ip ip6"></div><div class="ip ip7"></div><div class="ipc"></div></div>
+    <div class="ico-label">写真</div>
+  </div>
+  <div class="dsk-icon" ondblclick="openWin('music')">
+    <div class="ico-music">♫</div><div class="ico-label">ミュージック</div>
+  </div>
+  <div class="dsk-icon" ondblclick="openWin('notes')">
+    <div class="ico-notes"><div class="notes-top"></div><div class="notes-body"><div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div></div></div>
+    <div class="ico-label">メモ</div>
+  </div>
+  <div class="dsk-icon" ondblclick="openDoc('career')">
+    <div class="ico">📄</div><div class="ico-label">Career.pdf</div>
+  </div>
+  <div class="dsk-icon" ondblclick="openWin('tarot')">
+    <div class="ico">🔮</div><div class="ico-label">Tarot</div>
+  </div>
+  <div class="dsk-icon" ondblclick="openWin('claude')">
+    <div class="ico-claude"><svg viewBox="0 0 48 48" width="48" height="48"><rect width="48" height="48" rx="12" fill="#E07A50"/><g transform="translate(24,24)"><line x1="0" y1="-12" x2="0" y2="12" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="-12" y1="0" x2="12" y2="0" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="-8.5" y1="-8.5" x2="8.5" y2="8.5" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="8.5" y1="-8.5" x2="-8.5" y2="8.5" stroke="white" stroke-width="3" stroke-linecap="round"/><line x1="0" y1="-12" x2="0" y2="-10" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="0" y1="10" x2="0" y2="12" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="-12" y1="0" x2="-10" y2="0" stroke="white" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="0" x2="12" y2="0" stroke="white" stroke-width="4" stroke-linecap="round"/></g></svg></div>
+    <div class="ico-label">Claude</div>
+  </div>
+</div>
+
+<!-- ===== FINDER: About Me ===== -->
+<div class="win" id="win-finder-aboutme" style="width:580px;height:420px;">
+  <div class="win-tb" onmousedown="drag(event,'win-finder-aboutme')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('finder-aboutme')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">About Me</div>
+  </div>
+  <div class="win-body" style="display:flex;padding:0;">
+    <div class="finder-sidebar">
+      <div class="fs-title">Favorites</div>
+      <div class="fs-item active">📁 About Me</div>
+      <div class="fs-item" onclick="openFinder('photos')">📁 Photos</div>
+    </div>
+    <div class="finder-content">
+      <div class="finder-grid">
+        <div class="finder-file" ondblclick="openDoc('profile')">
+          <div class="ff-ico">📄</div><div class="ff-name">profile.doc</div>
+        </div>
+        <div class="finder-file" ondblclick="openDoc('likes')">
+          <div class="ff-ico">📄</div><div class="ff-name">likes.doc</div>
+        </div>
+        <div class="finder-file" ondblclick="openDoc('mystory')">
+          <div class="ff-ico">📄</div><div class="ff-name">my-story.doc</div>
+        </div>
+        <div class="finder-file" ondblclick="openDoc('emoji')">
+          <div class="ff-ico">📄</div><div class="ff-name">emoji.doc</div>
+        </div>
+        <div class="finder-file" ondblclick="openWin('tarot')">
+          <div class="ff-ico">🔮</div><div class="ff-name">Tarot.app</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FINDER: Photos ===== -->
+<div class="win" id="win-finder-photos" style="width:560px;height:440px;">
+  <div class="win-tb" onmousedown="drag(event,'win-finder-photos')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('finder-photos')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">写真</div>
+  </div>
+  <div class="win-body" style="display:flex;padding:0;">
+    <div class="finder-sidebar">
+      <div class="fs-title">Albums</div>
+      <div class="fs-item active" onclick="showAlbum('foods',this)">🍽️ Foods</div>
+      <div class="fs-item" onclick="showAlbum('malaysia',this)">🇲🇾 Malaysia</div>
+
+      <div class="fs-item" onclick="showAlbum('luv',this)">♡ my luv♡</div>
+    </div>
+    <div class="finder-content" style="padding:0;" id="photosContent">
+      <div class="photos-album-title" id="albumTitle">🍽️ Foods</div>
+      <div class="photos-grid" id="photosGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOC: Profile ===== -->
+<div class="win" id="win-doc-profile" style="width:480px;height:420px;">
+  <div class="win-tb" onmousedown="drag(event,'win-doc-profile')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-profile')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">profile.doc</div>
+  </div>
+  <div class="win-body">
+    <div class="doc-content">
+      <div class="profile-img"><img src="moe-avator.png" alt="Moe"></div>
+      <h1>須藤 萌</h1>
+      <p style="color:var(--blue);font-weight:600;font-size:13px;margin-bottom:12px;">Moe Sudo — PdM @ KAAAN Inc.</p>
+      <p>📍 千葉県幕張出身<br>🎂 1998年生まれ<br>🧠 ESFP — エンターテイナー型<br>🎓 Taylor's University（🇲🇾）国際観光学部 卒</p>
+      <p>Pingle（Slackタスク管理SaaS）のPdMとして、Claude Codeを駆使しながら企画〜UX〜実装まで一気通貫で手を動かす人。</p>
+      <p>食べることとサウナが大好きで、最近はタロットカードと植物にもハマり中。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOC: Likes ===== -->
+<div class="win" id="win-doc-likes" style="width:400px;height:440px;">
+  <div class="win-tb" onmousedown="drag(event,'win-doc-likes')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-likes')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">likes.doc</div>
+  </div>
+  <div class="win-body">
+    <div class="doc-content">
+      <h1>☀️ Likes</h1>
+
+      <h2>🍽️ Food & Drink</h2>
+      <p>お寿司 / ラーメン / マクドナルド<br>🍷 ワイン & ビール</p>
+
+      <h2>🎵 Music</h2>
+      <p>NewJeans / Harry Styles / Ariana Grande / H.E.R.<br>K-POP, Pops, R&B を中心に、なんでも聴く</p>
+
+      <h2>☁️ Chill</h2>
+      <p>散歩（都内東側をブラブラ） / 映画（アクション系） / 音楽 / お酒</p>
+
+      <h2>🧖‍♀️ Sauna</h2>
+      <p>清澄白河の辰巳湯が聖地。一時期は週2〜3で通い、常連おばちゃんとも顔見知り</p>
+
+      <h2>🎮 Game</h2>
+      <p>クッキーラン — ガチ勢。推しはミルキーウェイ味クッキー。7年前に一度ハマり、1年前に再開。今はほぼ毎日プレイ</p>
+
+      <h2>🔮 最近のマイブーム</h2>
+      <p>タロット — Disney+「占い師たちの運命バトル」を観て興味を持ち、カードを購入<br>🌿 植物を愛でる</p>
+
+      <h2>✈️ Travel</h2>
+      <p>半分計画、半分ノープラン派<br>🇲🇾 アナザースカイ：マレーシア<br>🇲🇽 行きたい国：メキシコ</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOC: My Story ===== -->
+<div class="win" id="win-doc-mystory" style="width:520px;height:500px;">
+  <div class="win-tb" onmousedown="drag(event,'win-doc-mystory')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-mystory')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">my-story.doc</div>
+  </div>
+  <div class="win-body">
+    <div class="doc-content">
+      <h1>📖 My Story</h1>
+      <div class="chapter">
+        <div class="chapter-title">Chapter 1 — 幕張で育つ 🏠</div>
+        <p>千葉県幕張で生まれ育つ。5歳下の弟がいる。<br>子供の頃の夢はアイスクリーム屋さん 🍦<br>中学時代は部活と塾に明け暮れた。</p>
+      </div>
+      <div class="chapter">
+        <div class="chapter-title">Chapter 2 — 環境が人生を変える 🌟</div>
+        <p>高校進学。びっくりするほど陽キャが多い学校だった。しかもスレていない陽キャ。</p>
+        <p>みんな明るくてポジティブでフレンドリーで、でもただ楽しいだけじゃなくてちゃんと努力もしている。周りにも似たような人たちが集まり、お互いをプラスに高め合い、結果として人脈もチャンスも掴んでいる人が多かった。</p>
+        <p>この環境に身を置けたことは、人生のターニングポイントだった。</p>
+      </div>
+      <div class="chapter">
+        <div class="chapter-title">Chapter 3 — マレーシアへ 🇲🇾</div>
+        <p>Taylor's University 国際観光学部イベント経営学科に進学。<br>勉強！遊び！の繰り返し。ボランティアもしたし、旅もしたし、近くの韓国料理屋で韓国の飲み方も教わった。ちゃんと学生してた。</p>
+        <p>初めてイスラム文化に触れ、多民族国家で暮らす経験をした。当時流行っていた「チル」もここで体感。住みやすすぎて移住も考えたぐらい好き。</p>
+        <p>住みやすすぎて移住も考えたぐらい好き。</p>
+      </div>
+      <div class="chapter">
+        <div class="chapter-title">Chapter 4 — マイベスト時代 📊</div>
+        <p>たまたま声をかけてもらったのがきっかけで、2021年に株式会社マイベストへ。海外進出もしていたし、全員が毎日行う「選択」をサポートするという事業が面白そうだった。</p>
+        <p>コンテンツディレクターとして、制作フロー構築からKPI策定、編集まで一貫して担当。</p>
+      </div>
+      <div class="chapter">
+        <div class="chapter-title">Chapter 5 — KAAANへ、そして今 🚀</div>
+        <p>2025年5月、株式会社KAAANに参画。広報・社内DX・プロダクト開発に従事。</p>
+        <p>Pingle（Slackタスク管理SaaS）のPdMとして企画〜実装まで推進中。Claude Codeとの出会いで、PM × 開発の新しい働き方を実践している。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOC: Emoji ===== -->
+<div class="win" id="win-doc-emoji" style="width:360px;height:300px;">
+  <div class="win-tb" onmousedown="drag(event,'win-doc-emoji')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-emoji')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">emoji.doc</div>
+  </div>
+  <div class="win-body">
+    <div class="doc-content">
+      <h1>💅 My Emoji Collection</h1>
+      <p>よく使う絵文字たち：</p>
+      <div class="emoji-showcase">🎶🎀💅✨💦⁉️</div>
+      <div class="emoji-showcase" style="font-size:24px;">ฅ^•ω•^ฅ</div>
+      <div class="emoji-showcase" style="font-size:24px;">(⁎⁍̴̛ᴗ⁍̴̛⁎)</div>
+      <p style="margin-top:12px;color:var(--text2);font-size:12px;">※ ギャル魂は絵文字に宿る 💅✨</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DOC: Career ===== -->
+<div class="win" id="win-doc-career" style="width:480px;height:380px;">
+  <div class="win-tb" onmousedown="drag(event,'win-doc-career')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-career')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">Career.pdf</div>
+  </div>
+  <div class="win-body">
+    <div class="doc-content">
+      <h1>💼 Career</h1>
+      <h2>株式会社KAAAN — 2025.05〜Now</h2>
+      <p><strong>In-house Marketer / Ops / PdM</strong><br>広報・社内DX・プロダクト開発に従事。Pingle（Slackタスク管理SaaS）のPdMとして企画〜実装まで推進中。</p>
+      <h2>株式会社マイベスト — 2021.04〜2025.04</h2>
+      <p><strong>コンテンツディレクター</strong><br>コンテンツ制作フロー構築・改善、ディレクション、クオリティ管理。オウンドメディア立ち上げ時にロードマップ・KPI策定から制作管理まで一貫対応。</p>
+      <h2>Taylor's University 🇲🇾</h2>
+      <p>国際観光学部 イベント経営学科 卒業</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP: Music ===== -->
+<div class="win" id="win-music" style="width:440px;height:460px;">
+  <div class="win-tb" style="background:rgba(26,26,26,0.9);" onmousedown="drag(event,'win-music')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('music')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title" style="color:white;">Music</div>
+  </div>
+  <div class="win-body" style="padding:0;">
+    <div class="music-app">
+      <div class="music-header">
+        <div class="mh-title">Playlist</div>
+        <h2>Moe's Favorites</h2>
+      </div>
+      <div class="music-list">
+        <div class="music-track playing">
+          <div class="mt-num">▶</div>
+          <div class="mt-art">🐰</div>
+          <div class="mt-info"><div class="mt-name">OMG</div><div class="mt-artist">NewJeans</div></div>
+          <div class="mt-dur">3:31</div>
+        </div>
+        <div class="music-track">
+          <div class="mt-num">2</div>
+          <div class="mt-art">🌊</div>
+          <div class="mt-info"><div class="mt-name">As It Was</div><div class="mt-artist">Harry Styles</div></div>
+          <div class="mt-dur">2:47</div>
+        </div>
+        <div class="music-track">
+          <div class="mt-num">3</div>
+          <div class="mt-art">☁️</div>
+          <div class="mt-info"><div class="mt-name">positions</div><div class="mt-artist">Ariana Grande</div></div>
+          <div class="mt-dur">2:52</div>
+        </div>
+        <div class="music-track">
+          <div class="mt-num">4</div>
+          <div class="mt-art">🎤</div>
+          <div class="mt-info"><div class="mt-name">Focus</div><div class="mt-artist">H.E.R.</div></div>
+          <div class="mt-dur">3:42</div>
+        </div>
+        <div class="music-track">
+          <div class="mt-num">5</div>
+          <div class="mt-art">🐰</div>
+          <div class="mt-info"><div class="mt-name">Ditto</div><div class="mt-artist">NewJeans</div></div>
+          <div class="mt-dur">3:10</div>
+        </div>
+        <div class="music-track">
+          <div class="mt-num">6</div>
+          <div class="mt-art">🐰</div>
+          <div class="mt-info"><div class="mt-name">Hype Boy</div><div class="mt-artist">NewJeans</div></div>
+          <div class="mt-dur">3:00</div>
+        </div>
+      </div>
+      <div class="music-player-bar">
+        <div class="mpb-info">
+          <div class="mpb-art">🐰</div>
+          <div><div class="mpb-title">OMG</div><div class="mpb-artist">NewJeans</div></div>
+        </div>
+        <div class="mpb-progress"><div class="mpb-fill"></div></div>
+        <div class="mpb-controls">
+          <span>⏮</span><span class="play">▶</span><span>⏭</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP: メモ ===== -->
+<div class="win" id="win-notes" style="width:560px;height:400px;">
+  <div class="win-tb" onmousedown="drag(event,'win-notes')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('notes')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">メモ</div>
+  </div>
+  <div class="win-body" style="padding:0;">
+    <div class="notes-app">
+      <div class="notes-sidebar">
+        <div class="ns-folder">📁 メモ <span style="color:var(--text2);font-weight:400;margin-left:auto;">3</span></div>
+        <div class="ns-item active" onclick="showNote('motto')">
+          <div class="ns-title">Motto & Values</div>
+          <div class="ns-date">2026/03/15</div>
+          <div class="ns-preview">Live the life you love...</div>
+        </div>
+        <div class="ns-item" onclick="showNote('goals')">
+          <div class="ns-title">2026年の目標</div>
+          <div class="ns-date">2026/01/01</div>
+          <div class="ns-preview">麻雀を覚える...</div>
+        </div>
+        <div class="ns-item" onclick="showNote('random')">
+          <div class="ns-title">雑メモ</div>
+          <div class="ns-date">2026/03/28</div>
+          <div class="ns-preview">バーベキューの道具を揃える...</div>
+        </div>
+      </div>
+      <div class="notes-main" id="notesMain">
+        <div class="nm-date">2026年3月15日 21:30</div>
+        <div class="nm-title">Motto & Values</div>
+        <div class="nm-body">
+          <div class="nm-quote">Live the life you love,<br>Love the life you live.</div>
+          <p><strong>大事にしていること：</strong></p>
+          <ul>
+            <li>周りへの感謝を忘れるな</li>
+            <li>後悔するぐらいならやれ</li>
+            <li>チャンスを逃すな</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP: Tarot ===== -->
+<div class="win" id="win-tarot" style="width:340px;height:440px;">
+  <div class="win-tb" style="background:rgba(26,10,46,0.8);" onmousedown="drag(event,'win-tarot')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('tarot')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title" style="color:white;">Tarot</div>
+  </div>
+  <div class="win-body" style="padding:0;">
+    <div class="tarot-app" id="tarotApp">
+      <div class="tarot-title">🔮 Today's Tarot</div>
+      <div class="tarot-sub">カードをクリックして1枚引いてみて</div>
+      <div class="tarot-card" id="tarotCard" onclick="drawTarot()">🌙</div>
+      <div class="tarot-result" id="tarotResult"></div>
+      <button class="tarot-btn" id="tarotBtn" onclick="resetTarot()" style="display:none;">もう一度引く</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP: Claude ===== -->
+<div class="win" id="win-claude" style="width:600px;height:480px;">
+  <div class="win-tb" onmousedown="drag(event,'win-claude')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('claude')"></div><div class="tl-dot y" onclick="minimizeWin('claude')"></div><div class="tl-dot g" onclick="maximizeWin('claude')"></div></div>
+    <div class="win-title">Claude</div>
+  </div>
+  <div class="win-body" style="padding:0;display:flex;">
+    <div class="claude-sidebar">
+      <div class="claude-sb-header">
+        <div class="claude-sb-logo"><span style="color:#DA7756;">✦</span> Claude</div>
+        <button class="claude-sb-new" onclick="claudeNewChat()" title="New chat">+</button>
+      </div>
+      <div class="claude-sb-chats" id="claudeSbChats">
+        <div class="claude-sb-item active">須藤萌について</div>
+      </div>
+      <div class="claude-sb-footer">
+        <div class="claude-sb-avatar">S</div>
+        <div class="claude-sb-name">Sudo Moe</div>
+      </div>
+    </div>
+    <div class="claude-app">
+      <div class="claude-chat" id="claudeChat">
+        <div class="claude-msgs" id="claudeMsgs">
+          <div class="claude-welcome" id="claudeWelcome">
+            <div class="claude-welcome-icon">✦</div>
+            <div class="claude-welcome-text">須藤萌について聞いてみて</div>
+            <div class="claude-suggestions">
+              <div class="claude-chip" onclick="claudeSend('須藤萌について教えて')">須藤萌について教えて</div>
+              <div class="claude-chip" onclick="claudeSend('趣味は？')">趣味は？</div>
+              <div class="claude-chip" onclick="claudeSend('経歴を教えて')">経歴を教えて</div>
+              <div class="claude-chip" onclick="claudeSend('スキルは？')">スキルは？</div>
+              <div class="claude-chip" onclick="claudeSend('サウナについて')">サウナについて</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="claude-input-area">
+        <div class="claude-input-box">
+          <input class="claude-input" id="claudeInput" placeholder="須藤萌に聞きたいことを入力..." onkeydown="if(event.key==='Enter')claudeSendInput()" oninput="document.getElementById('claudeSendBtn').classList.toggle('active',this.value.trim().length>0)">
+          <button class="claude-send" id="claudeSendBtn" onclick="claudeSendInput()">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DOCK -->
+<div id="dock">
+  <div class="dk dk-folder" onclick="openFinder('aboutme')"><span class="dk-tip">About Me</span></div>
+  <div class="dk dk-photos" onclick="openFinder('photos')"><span class="dk-tip">写真</span><div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="petal p4"></div><div class="petal p5"></div><div class="petal p6"></div><div class="petal p7"></div><div class="petal-center"></div></div>
+  <div class="dk dk-music" onclick="openWin('music')"><span class="dk-tip">ミュージック</span></div>
+  <div class="dk dk-notes" onclick="openWin('notes')"><span class="dk-tip">メモ</span></div>
+  <div class="dk dk-career" onclick="openDoc('career')"><span class="dk-tip">Career</span></div>
+  <div class="dk-sep"></div>
+  <div class="dk dk-tarot" onclick="openWin('tarot')"><span class="dk-tip">Tarot</span></div>
+  <div class="dk" onclick="openWin('claude')" style="background:#E07A50;border-radius:11px;padding:0;overflow:hidden;"><span class="dk-tip">Claude</span><svg viewBox="0 0 44 44" width="44" height="44"><g transform="translate(22,22)"><line x1="0" y1="-10" x2="0" y2="10" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="-10" y1="0" x2="10" y2="0" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="-7" y1="-7" x2="7" y2="7" stroke="white" stroke-width="2.5" stroke-linecap="round"/><line x1="7" y1="-7" x2="-7" y2="7" stroke="white" stroke-width="2.5" stroke-linecap="round"/></g></svg></div>
+</div>
+
+<script>
+// ===== MINIMIZE / MAXIMIZE =====
+const preMax = {};
+function minimizeWin(id) { closeWin(id); }
+function maximizeWin(id) {
+  const w = document.getElementById('win-'+id) || document.getElementById('win-finder-'+id) || document.getElementById('win-doc-'+id);
+  if (!w) return;
+  if (w.dataset.maximized === '1') {
+    const s = preMax[w.id];
+    if(s){w.style.left=s.l;w.style.top=s.t;w.style.width=s.w;w.style.height=s.h;}
+    w.style.borderRadius='12px';
+    w.dataset.maximized='0';
+  } else {
+    preMax[w.id]={l:w.style.left,t:w.style.top,w:w.style.width,h:w.style.height};
+    w.style.left='0';w.style.top='28px';w.style.width='100vw';w.style.height='calc(100vh - 28px - 80px)';
+    w.style.borderRadius='0';
+    w.dataset.maximized='1';
+  }
+}
+
+// Add yellow/green handlers to all windows
+document.querySelectorAll('.win').forEach(w => {
+  const id = w.id.replace('win-','');
+  const dots = w.querySelectorAll('.tl-dot');
+  if(dots[1] && !dots[1].onclick) dots[1].onclick = () => minimizeWin(id);
+  if(dots[2] && !dots[2].onclick) dots[2].onclick = () => maximizeWin(id);
+});
+
+// ===== LIGHTBOX =====
+function openLightbox(src) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+// ===== RESIZE HANDLES (inject into all windows) =====
+document.querySelectorAll('.win').forEach(w => {
+  ['rz-t','rz-r','rz-b','rz-l','rz-tl','rz-tr','rz-bl','rz-br'].forEach(cls => {
+    const d = document.createElement('div');
+    d.className = 'rz ' + cls;
+    w.appendChild(d);
+  });
+});
+
+let rzState = null;
+document.addEventListener('mousedown', e => {
+  if (!e.target.classList.contains('rz')) return;
+  e.preventDefault();
+  const w = e.target.closest('.win');
+  w.style.zIndex = ++zI;
+  const r = w.getBoundingClientRect();
+  const cls = e.target.className;
+  rzState = {
+    w, sx:e.clientX, sy:e.clientY,
+    sw:r.width, sh:r.height, sl:r.left, st:r.top,
+    t: cls.includes('rz-t'), b: cls.includes('rz-b'),
+    l: cls.includes('rz-l'), r: cls.includes('rz-r'),
+  };
+  // corners
+  if(cls.includes('rz-tl')){rzState.t=true;rzState.l=true;}
+  if(cls.includes('rz-tr')){rzState.t=true;rzState.r=true;}
+  if(cls.includes('rz-bl')){rzState.b=true;rzState.l=true;}
+  if(cls.includes('rz-br')){rzState.b=true;rzState.r=true;}
+});
+
+// ===== CLOCK =====
+function updateClock(){
+  const n=new Date();
+  const d=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][n.getDay()];
+  const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][n.getMonth()];
+  document.getElementById('clock').textContent=`${d} ${m} ${n.getDate()}  ${n.getHours()}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
+updateClock(); setInterval(updateClock,10000);
+
+// ===== WINDOW MANAGEMENT =====
+let zI=1000;
+const positions={};
+let openCount=0;
+
+function getPos(id){
+  if(positions[id]) return positions[id];
+  openCount++;
+  const x=60+(openCount%5)*30;
+  const y=60+(openCount%5)*25;
+  return {x,y};
+}
+
+function showWin(id){
+  const w=document.getElementById('win-'+id);
+  if(w.classList.contains('show')){ w.style.zIndex=++zI; return; }
+  const p=getPos(id);
+  if(!w.style.left||w.style.left==='') { w.style.left=p.x+'px'; w.style.top=p.y+'px'; }
+  w.classList.add('show');
+  w.style.zIndex=++zI;
+  // Update menubar
+  const t=w.querySelector('.win-title');
+  if(t) document.getElementById('mbAppName').textContent=t.textContent;
+}
+
+function closeWin(id){
+  const w=document.getElementById('win-'+id);
+  w.classList.remove('show');
+}
+
+function openFinder(name){ showWin('finder-'+name); }
+function openDoc(name){ showWin('doc-'+name); }
+function openWin(name){ showWin(name); }
+
+// ===== DRAG =====
+let ds=null;
+function drag(e,id){
+  const w=document.getElementById(id);
+  e.preventDefault();
+  w.style.zIndex=++zI;
+  const t=w.querySelector('.win-title');
+  if(t) document.getElementById('mbAppName').textContent=t.textContent;
+  ds={w, sx:e.clientX-w.offsetLeft, sy:e.clientY-w.offsetTop};
+}
+document.addEventListener('mousemove',e=>{
+  if(ds){
+    ds.w.style.left=(e.clientX-ds.sx)+'px';
+    ds.w.style.top=Math.max(28,e.clientY-ds.sy)+'px';
+  }
+  if(rzState){
+    const s=rzState, dx=e.clientX-s.sx, dy=e.clientY-s.sy;
+    const minW=280, minH=180;
+    if(s.r) s.w.style.width=Math.max(minW,s.sw+dx)+'px';
+    if(s.b) s.w.style.height=Math.max(minH,s.sh+dy)+'px';
+    if(s.l){const nw=Math.max(minW,s.sw-dx);if(nw>minW){s.w.style.width=nw+'px';s.w.style.left=(s.sl+dx)+'px';}}
+    if(s.t){const nh=Math.max(minH,s.sh-dy);if(nh>minH){s.w.style.height=nh+'px';s.w.style.top=Math.max(28,s.st+dy)+'px';}}
+  }
+});
+document.addEventListener('mouseup',()=>{ds=null;rzState=null;});
+
+// Focus
+document.querySelectorAll('.win').forEach(w=>{
+  w.addEventListener('mousedown',()=>{
+    w.style.zIndex=++zI;
+    const t=w.querySelector('.win-title');
+    if(t) document.getElementById('mbAppName').textContent=t.textContent;
+  });
+});
+
+// ===== PHOTOS =====
+const albums = {
+  foods: {
+    title: '🍽️ Foods',
+    path: 'Foods/',
+    files: ['BE6A1BB3-8D0F-4906-B32E-4CAD8537236B.JPG','IMG_0219.jpg','IMG_5208.jpg','IMG_5209.jpg','IMG_5431.jpg','IMG_5463.jpg','IMG_8193.jpg','IMG_8289.jpg','IMG_9408.jpg','IMG_9410.jpg']
+  },
+  malaysia: {
+    title: '🇲🇾 Malaysia',
+    path: 'Malaysia/',
+    files: ['IMG_2244.jpg','IMG_3065.jpg','IMG_3081.jpg','IMG_3082.jpg','IMG_3122.jpg','IMG_3248.jpg','IMG_3370.JPG','IMG_6510.jpg','IMG_6545.jpg','IMG_6571.jpg','IMG_6575.jpg','IMG_6779.jpg','IMG_6780.jpg','IMG_6781.jpg','IMG_6782.jpg','IMG_6931.jpg','IMG_7335.jpg','IMG_7366.jpg','IMG_7394.jpg','IMG_7395.jpg','IMG_8393.jpg','IMG_8404.jpg','IMG_8405.jpg','IMG_8508.jpg','IMG_8512.jpg','IMG_8589.jpg','IMG_8607.jpg','IMG_8624.jpg']
+  },
+  luv: {
+    title: '♡ my luv♡',
+    path: 'my luv♡/',
+    files: ['796537777.684904.JPG','IMG_0212.jpg','IMG_0223.jpg','IMG_1269.jpg','IMG_1847.JPG','IMG_2887.jpg','IMG_5437.jpg','IMG_5438.jpg','IMG_5489.jpg','IMG_6139.jpg','IMG_7509.jpg','IMG_8620.jpg','IMG_8879.jpg','IMG_8916.JPG','IMG_9149.jpg']
+  }
+};
+
+function showAlbum(key, el) {
+  const album = albums[key];
+  document.getElementById('albumTitle').textContent = album.title;
+  const grid = document.getElementById('photosGrid');
+  grid.innerHTML = album.files.map(f => {
+    const src = album.path + f;
+    return `<div class="photo-thumb" onclick="openLightbox('${src}')"><img src="${src}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='📷'"></div>`;
+  }).join('');
+  if (el) {
+    document.querySelectorAll('#win-finder-photos .fs-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+  }
+}
+// Init first album
+setTimeout(() => showAlbum('foods'), 0);
+
+// ===== NOTES =====
+const noteData = {
+  motto: {
+    date: '2026年3月15日 21:30',
+    title: 'Motto & Values',
+    body: `<div class="nm-quote">Live the life you love,<br>Love the life you live.</div>
+      <p><strong>大事にしていること：</strong></p>
+      <ul><li>周りへの感謝を忘れるな</li><li>後悔するぐらいならやれ</li><li>チャンスを逃すな</li></ul>`
+  },
+  goals: {
+    date: '2026年1月1日 0:05',
+    title: '2026年の目標',
+    body: `<ul><li>🀄 麻雀を覚える</li><li>🌿 植物をちゃんと育てる</li><li>🔮 タロットもっと勉強する</li><li>🚗 ペーパードライバーからの卒業</li></ul>`
+  },
+  random: {
+    date: '2026年3月28日 19:42',
+    title: '雑メモ',
+    body: `<ul><li>バーベキューの道具を揃える</li><li>どう森をゲットする</li><li>claude codeのセキュリティについての記事読む</li></ul>`
+  }
+};
+
+function showNote(key) {
+  const note = noteData[key];
+  const main = document.getElementById('notesMain');
+  main.innerHTML = `<div class="nm-date">${note.date}</div><div class="nm-title">${note.title}</div><div class="nm-body">${note.body}</div>`;
+  document.querySelectorAll('.ns-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+// ===== TAROT =====
+const tarotCards=[
+  {name:'The Fool',emoji:'🃏',msg:'新しい冒険の始まり！直感を信じて飛び込もう'},
+  {name:'The Magician',emoji:'🎩',msg:'あなたには全てを形にする力がある。自信を持って'},
+  {name:'The High Priestess',emoji:'🌙',msg:'直感が冴えている時。内なる声に耳を傾けて'},
+  {name:'The Empress',emoji:'👑',msg:'豊かさと創造性に満ちた時期。愛を大切に'},
+  {name:'The Emperor',emoji:'🏛️',msg:'リーダーシップを発揮する時。秩序と安定を'},
+  {name:'The Star',emoji:'⭐',msg:'希望の光が差し込む。夢を諦めないで'},
+  {name:'The Sun',emoji:'☀️',msg:'最高の運気！何をやっても上手くいく時'},
+  {name:'The Moon',emoji:'🌕',msg:'少し不安な時期かも。でも朝は必ず来る'},
+  {name:'The World',emoji:'🌍',msg:'一つのサイクルの完成。おめでとう！'},
+  {name:'Wheel of Fortune',emoji:'🎡',msg:'運命の転換期。流れに身を任せて'},
+  {name:'Strength',emoji:'🦁',msg:'内なる強さが試される時。優しさこそが力'},
+  {name:'The Lovers',emoji:'💕',msg:'大切な選択の時。心が求めるものを選んで'},
+];
+
+function drawTarot(){
+  const card=tarotCards[Math.floor(Math.random()*tarotCards.length)];
+  const c=document.getElementById('tarotCard');
+  c.style.transform='rotateY(180deg)';
+  setTimeout(()=>{
+    c.textContent=card.emoji;
+    c.style.transform='rotateY(0)';
+    c.style.border='2px solid rgba(175,82,222,0.6)';
+    c.style.background='linear-gradient(135deg, #3D2B79 0%, #1A0A3E 100%)';
+    document.getElementById('tarotResult').innerHTML=`<div class="tr-name">${card.name}</div><p>${card.msg}</p>`;
+    document.getElementById('tarotBtn').style.display='inline-block';
+    c.onclick=null;
+  },300);
+}
+
+function resetTarot(){
+  const c=document.getElementById('tarotCard');
+  c.textContent='🌙';
+  c.style.transform='';
+  c.style.border='';
+  c.style.background='';
+  c.onclick=drawTarot;
+  document.getElementById('tarotResult').innerHTML='';
+  document.getElementById('tarotBtn').style.display='none';
+}
+
+// ===== CLAUDE CHAT =====
+const claudeDB={
+  intro:{kw:['自己紹介','教えて','について','誰','はじめまして'],
+    a:`<p>はじめまして！<strong>須藤萌（すどう もえ）</strong>です。</p><p>1998年生まれ、千葉県幕張出身。マレーシアのTaylor's Universityを卒業後、マイベストでコンテンツディレクターを経て、現在は株式会社KAAANでPdMをしています。</p><p>食べることとサウナが大好きで、最近はタロットと植物にもハマっています。よろしくお願いします！</p>`},
+  career:{kw:['経歴','キャリア','仕事','会社','マイベスト','KAAAN'],
+    a:`<h3>経歴</h3><p><strong>株式会社KAAAN</strong>（2025.05〜）<br>PdM / In-house Marketer。Pingle（Slackタスク管理SaaS）の企画〜実装を推進中。</p><p><strong>株式会社マイベスト</strong>（2021〜2025）<br>コンテンツディレクター。制作フロー構築・メディア運営を担当。</p><p><strong>Taylor's University 🇲🇾</strong><br>国際観光学部イベント経営学科卒。</p>`},
+  hobbies:{kw:['趣味','好き','休日','プライベート','hobby'],
+    a:`<p>趣味はたくさんありますが…！</p><ul><li>🧖‍♀️ <strong>サウナ</strong> — 清澄白河の辰巳湯が聖地</li><li>🍪 <strong>クッキーラン</strong> — ガチ勢。推しはミルキーウェイ味クッキー</li><li>🍽️ <strong>食べること</strong> — 寿司、ラーメン、マック</li><li>☁️ <strong>チル</strong> — 散歩、音楽、映画、お酒</li><li>🔮 <strong>タロット</strong> — 最近カード買いました</li><li>🌿 <strong>植物</strong> — 愛でてます</li></ul>`},
+  skills:{kw:['スキル','得意','できること','強み'],
+    a:`<p>一番の強みは<strong>企画から実装まで一気通貫でやれる</strong>ところです。</p><ul><li>プロダクトマネジメント / UX設計</li><li>コンテンツ制作・ディレクション / SEO</li><li>業務フロー設計 / 社内DX</li><li>Claude Code / プロンプト設計 / Slack Bot開発</li></ul>`},
+  sauna:{kw:['サウナ','ととのう','銭湯','辰巳'],
+    a:`<p>サウナの話、待ってました！🧖‍♀️</p><p>ホームは清澄白河の<strong>辰巳湯</strong>。一時期は週2〜3で通って、常連のおばちゃんとも顔見知りになるレベルでした。</p><p>サウナは最高のリフレッシュ方法。おすすめの施設があればぜひ教えてください！</p>`},
+  food:{kw:['食べ物','ごはん','グルメ','寿司','ラーメン','マック','食べ'],
+    a:`<p>食べることが大好きです！🍽️</p><p>好きな食べ物ベスト3：</p><ul><li>🍣 お寿司</li><li>🍜 ラーメン</li><li>🍔 マクドナルド</li></ul><p>都内東側をブラブラしながら、おいしいお店を開拓してます。おすすめあったら教えてください！</p>`},
+  cookierun:{kw:['クッキーラン','cookie','ゲーム'],
+    a:`<p>クッキーラン！ガチ勢です 🍪</p><p>推しは<strong>ミルキーウェイ味クッキー</strong>。7年前に一度ハマって離れたんですが、1年前に再開してからはほぼ毎日やってます。</p><p>クッキーラン仲間がいたらぜひ声かけてください！</p>`},
+  music:{kw:['音楽','曲','アーティスト','newjeans','ニュージーンズ'],
+    a:`<p>音楽は幅広く聴きますが、特に好きなのは：</p><ul><li>🐰 <strong>NewJeans</strong>（最近のリピート：OMG）</li><li>🌊 <strong>Harry Styles</strong></li><li>☁️ <strong>Ariana Grande</strong></li><li>🎤 <strong>H.E.R.</strong></li></ul><p>ジャンルはK-POP、Pops、R&Bが中心ですが、基本なんでも聴きます！</p>`},
+  tarot:{kw:['タロット','占い','カード'],
+    a:`<p>最近ハマり始めたんです 🔮</p><p>きっかけはDisney+の「占い師たちの運命バトル」。笑っちゃうほど当てていくのが面白すぎて、気づいたらタロットカードを買ってました。</p><p>まだ勉強中ですが、そのうちみんなを占えるようになりたい！</p>`},
+  malaysia:{kw:['マレーシア','留学','大学','taylor'],
+    a:`<p>マレーシアは私の人生を変えた場所です 🇲🇾</p><p>Taylor's Universityに進学して、初めてイスラム文化に触れたり、多民族国家で暮らす経験をしました。勉強も遊びも全力で、ボランティアや旅もたくさんした。</p><p>住みやすすぎて移住も考えたぐらい大好きな国です。</p>`},
+};
+const claudeFallback=`<p>うーん、その質問にはまだ答えられないかも 🤔</p><p>こんなこと聞いてみてください：</p><ul><li>「自己紹介して」</li><li>「趣味は？」</li><li>「経歴を教えて」</li><li>「サウナについて」</li><li>「クッキーランについて」</li></ul>`;
+
+function claudeMatch(input){
+  const n=input.toLowerCase();
+  let best=null,bestS=0;
+  for(const[k,d]of Object.entries(claudeDB)){
+    let s=0;
+    for(const kw of d.kw) if(n.includes(kw.toLowerCase())) s+=kw.length;
+    if(s>bestS){bestS=s;best=d;}
+  }
+  return best?best.a:claudeFallback;
+}
+
+let claudeTyping=false;
+function claudeSend(text){
+  document.getElementById('claudeInput').value=text;
+  claudeSendInput();
+}
+function claudeSendInput(){
+  const inp=document.getElementById('claudeInput');
+  const text=inp.value.trim();
+  if(!text||claudeTyping)return;
+  const w=document.getElementById('claudeWelcome');
+  if(w)w.style.display='none';
+  const msgs=document.getElementById('claudeMsgs');
+  // user msg
+  const u=document.createElement('div');
+  u.className='c-msg c-msg-user';
+  u.innerHTML=`<div class="c-msg-content">${text.replace(/</g,'&lt;')}</div>`;
+  msgs.appendChild(u);
+  inp.value='';
+  document.getElementById('claudeSendBtn').classList.remove('active');
+  scrollClaude();
+  // ai response
+  claudeTyping=true;
+  const answer=claudeMatch(text);
+  setTimeout(()=>{
+    const a=document.createElement('div');
+    a.className='c-msg c-msg-ai';
+    a.innerHTML=`<div class="c-msg-avatar">✦</div><div class="c-msg-body">${answer}</div>`;
+    msgs.appendChild(a);
+    claudeTyping=false;
+    scrollClaude();
+  },500+Math.random()*500);
+}
+function scrollClaude(){
+  const c=document.getElementById('claudeChat');
+  c.scrollTop=c.scrollHeight;
+}
+function claudeNewChat(){
+  const msgs=document.getElementById('claudeMsgs');
+  msgs.innerHTML=`<div class="claude-welcome" id="claudeWelcome">
+    <div class="claude-welcome-icon">✦</div>
+    <div class="claude-welcome-text">須藤萌について聞いてみて</div>
+    <div class="claude-suggestions">
+      <div class="claude-chip" onclick="claudeSend('須藤萌について教えて')">須藤萌について教えて</div>
+      <div class="claude-chip" onclick="claudeSend('趣味は？')">趣味は？</div>
+      <div class="claude-chip" onclick="claudeSend('経歴を教えて')">経歴を教えて</div>
+      <div class="claude-chip" onclick="claudeSend('スキルは？')">スキルは？</div>
+      <div class="claude-chip" onclick="claudeSend('サウナについて')">サウナについて</div>
+    </div>
+  </div>`;
+  claudeTyping=false;
+  // Add new chat to sidebar
+  const chats=document.getElementById('claudeSbChats');
+  chats.querySelectorAll('.claude-sb-item').forEach(i=>i.classList.remove('active'));
+  const item=document.createElement('div');
+  item.className='claude-sb-item active';
+  item.textContent='New chat';
+  chats.prepend(item);
+}
+</script>
+</body>
+</html>
