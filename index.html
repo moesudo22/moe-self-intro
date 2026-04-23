@@ -148,25 +148,16 @@ body {
   border-radius:12px; overflow:hidden;
 }
 
-/* macOS Notes Icon */
-.ico-notes {
-  width:48px; height:48px; position:relative; margin-bottom:3px;
+/* Notion Icon */
+.ico-notion {
+  width:48px; height:48px; margin-bottom:3px;
+  background:#FFFFFF;
+  border-radius:10px;
+  border:0.5px solid rgba(0,0,0,0.12);
+  display:flex; align-items:center; justify-content:center;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight:900; font-size:32px; color:#000;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-}
-.ico-notes .notes-top {
-  position:absolute; top:0; left:0; right:0; height:14px;
-  background: linear-gradient(180deg, #FDDB4A 0%, #F5C518 100%);
-  border-radius: 8px 8px 0 0;
-}
-.ico-notes .notes-body {
-  position:absolute; top:12px; left:0; right:0; bottom:0;
-  background: linear-gradient(180deg, #FFFEF5 0%, #FAF8EC 100%);
-  border-radius: 0 0 8px 8px;
-  border: 0.5px solid rgba(0,0,0,0.08);
-  display:flex; flex-direction:column; justify-content:center; padding:3px 6px; gap:3px;
-}
-.ico-notes .notes-line {
-  height:1px; background:rgba(0,0,0,0.06); width:100%;
 }
 
 /* ===== WINDOW (macOS) ===== */
@@ -343,49 +334,125 @@ body {
 .tarot-btn:hover { background:#9B30FF; }
 
 /* ===== NOTES (macOS style) ===== */
-.notes-app {
-  background:#FAF8F0; height:100%; display:flex;
+.notion-app {
+  background:#FFFFFF; height:100%; display:flex; color:#37352F;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
 }
-.notes-sidebar {
-  width:200px; background:rgba(0,0,0,0.02);
-  border-right:0.5px solid rgba(0,0,0,0.08); overflow-y:auto;
+.notion-sidebar {
+  width:240px; background:#F7F6F3;
+  border-right:0.5px solid rgba(55,53,47,0.09);
+  overflow-y:auto; padding:6px 0 14px;
+  font-size:14px; flex-shrink:0;
 }
-.notes-sidebar .ns-header {
-  padding:10px 14px; font-size:10px; font-weight:600; color:var(--text2);
-  text-transform:uppercase; letter-spacing:0.04em;
+.notion-sidebar .ws-header {
+  padding:8px 12px 6px; display:flex; align-items:center; gap:8px;
+  font-weight:600; color:#37352F; font-size:14px;
+}
+.notion-sidebar .ws-header .ws-icon {
+  width:22px; height:22px; border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; background:rgba(55,53,47,0.06);
+}
+.notion-sidebar .sb-quick {
+  padding:0 8px; display:flex; flex-direction:column; gap:1px;
+}
+.notion-sidebar .sb-quick-item {
+  padding:4px 8px; font-size:13px;
+  display:flex; align-items:center; gap:8px;
+  border-radius:4px; cursor:pointer;
+  color:rgba(55,53,47,0.7);
+}
+.notion-sidebar .sb-quick-item:hover { background:rgba(55,53,47,0.06); }
+.notion-sidebar .sb-section {
+  margin-top:14px; padding:4px 14px 2px;
+  font-size:11px; font-weight:500;
+  color:rgba(55,53,47,0.5);
+  letter-spacing:0.02em;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.notion-sidebar .sb-item {
+  padding:4px 14px 4px 18px; cursor:pointer;
+  display:flex; align-items:center; gap:6px;
+  color:rgba(55,53,47,0.85); font-size:13px;
+  line-height:1.3;
+}
+.notion-sidebar .sb-item:hover { background:rgba(55,53,47,0.05); }
+.notion-sidebar .sb-item.active { background:rgba(55,53,47,0.08); color:#37352F; font-weight:500; }
+.notion-sidebar .sb-item .sb-ico { font-size:14px; opacity:0.7; flex-shrink:0; width:16px; text-align:center; }
+.notion-sidebar .sb-item .sb-text { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.notion-main {
+  flex:1; overflow-y:auto; background:#FFFFFF;
+  color:#37352F;
+}
+.notion-topbar {
   display:flex; align-items:center; justify-content:space-between;
+  padding:10px 20px; border-bottom:0.5px solid rgba(55,53,47,0.08);
+  font-size:12px; color:rgba(55,53,47,0.65);
+  position:sticky; top:0; background:#FFFFFF; z-index:2;
 }
-.notes-sidebar .ns-folder {
-  padding:6px 14px; font-size:12px; font-weight:600; color:var(--orange);
+.notion-topbar .nt-crumb {
   display:flex; align-items:center; gap:6px;
 }
-.notes-sidebar .ns-item {
-  padding:8px 14px; cursor:pointer; border-bottom:0.5px solid rgba(0,0,0,0.04);
-  transition:background 0.1s;
+.notion-topbar .nt-actions {
+  display:flex; align-items:center; gap:10px; font-size:12px;
 }
-.notes-sidebar .ns-item:hover { background:rgba(0,0,0,0.03); }
-.notes-sidebar .ns-item.active { background:rgba(255,204,0,0.12); }
-.notes-sidebar .ns-item .ns-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:1px; }
-.notes-sidebar .ns-item .ns-date { font-size:10px; color:var(--text2); }
-.notes-sidebar .ns-item .ns-preview { font-size:10px; color:var(--text2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-.notes-main {
-  flex:1; padding:20px 24px; overflow-y:auto;
+.notion-article {
+  padding:36px 60px 60px;
+  max-width:900px; margin:0 auto;
 }
-.notes-main .nm-date { font-size:11px; color:var(--text2); text-align:center; margin-bottom:16px; }
-.notes-main .nm-title { font-size:22px; font-weight:700; color:var(--text); margin-bottom:16px; }
-.notes-main .nm-body { font-size:15px; line-height:1.8; color:var(--text); }
-.notes-main .nm-body p { margin-bottom:10px; }
-.notes-main .nm-quote {
-  font-size:18px; font-style:italic; color:var(--text2); margin:16px 0;
-  padding-left:16px; border-left:3px solid var(--orange);
+.notion-article .n-cover {
+  width:100%; height:160px; object-fit:cover;
+  border-radius:3px; margin-bottom:20px;
+  overflow:hidden;
 }
-.notes-main .nm-body ul { margin:8px 0 8px 20px; }
-.notes-main .nm-body li { margin-bottom:6px; }
-.notes-sidebar-bottom {
-  padding:8px 14px; border-top:0.5px solid rgba(0,0,0,0.06);
-  font-size:11px; color:var(--text2); text-align:center;
+.notion-article .n-cover img {
+  width:100%; height:100%; object-fit:cover; display:block;
 }
+.notion-article .n-cover-placeholder {
+  width:100%; height:160px; margin-bottom:20px; border-radius:3px;
+  background:linear-gradient(135deg,#FFE1EC 0%,#E4D3FF 50%,#D3E5FF 100%);
+  display:flex; align-items:center; justify-content:center;
+  color:rgba(55,53,47,0.5); font-size:13px;
+}
+.notion-article h1.n-title {
+  font-size:36px; font-weight:700; line-height:1.2;
+  margin:0 0 20px; color:#37352F;
+}
+.notion-article h2 {
+  font-size:22px; font-weight:700; color:#37352F;
+  margin:24px 0 6px; line-height:1.3;
+}
+.notion-article h3 {
+  font-size:18px; font-weight:700; color:#37352F;
+  margin:18px 0 4px;
+}
+.notion-article p {
+  font-size:15px; line-height:1.7; color:#37352F;
+  margin:0 0 10px;
+}
+.notion-article hr {
+  border:none; border-top:1px solid rgba(55,53,47,0.12);
+  margin:20px 0;
+}
+.notion-article blockquote {
+  border-left:3px solid #37352F;
+  padding:4px 0 4px 14px;
+  margin:10px 0; color:#37352F; font-size:15px; line-height:1.6;
+}
+.notion-article a {
+  color:#0B6E99; text-decoration:underline;
+  word-break:break-all;
+}
+.notion-article strong { font-weight:700; }
+.notion-article em { font-style:italic; color:#37352F; }
+.notion-article code {
+  background:rgba(135,131,120,0.15); color:#EB5757;
+  font-family: ui-monospace, Menlo, monospace; font-size:85%;
+  padding:0.2em 0.4em; border-radius:3px;
+}
+.notion-article ul { margin:6px 0 10px 24px; padding:0; }
+.notion-article li { margin-bottom:4px; font-size:15px; line-height:1.7; }
 
 /* ===== PHOTO LIGHTBOX ===== */
 #lightbox {
@@ -572,13 +639,16 @@ body {
   background:rgba(255,255,255,0.2); border-radius:3px;
 }
 
-.dk-notes {
-  background: linear-gradient(180deg, #FDDB4A 30%, #FFFEF5 30%);
+.dk-notion {
+  background:#FFFFFF;
+  border:0.5px solid rgba(0,0,0,0.12);
   border-radius:11px; position:relative;
 }
-.dk-notes::after {
-  content:''; position:absolute; top:20px; left:8px; right:8px; bottom:8px;
-  background: repeating-linear-gradient(transparent, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 6px);
+.dk-notion::after {
+  content:'N'; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight:900; font-size:30px; color:#000;
 }
 
 .dk-career {
@@ -644,9 +714,9 @@ body {
     </div>
     <div class="ico-label">Spotify</div>
   </div>
-  <div class="dsk-icon" ondblclick="openWin('notes')">
-    <div class="ico-notes"><div class="notes-top"></div><div class="notes-body"><div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div><div class="notes-line"></div></div></div>
-    <div class="ico-label">メモ</div>
+  <div class="dsk-icon" ondblclick="openWin('notion')">
+    <div class="ico-notion">N</div>
+    <div class="ico-label">Notion</div>
   </div>
   <div class="dsk-icon" ondblclick="openDoc('career')">
     <div class="ico">📄</div><div class="ico-label">Career.pdf</div>
@@ -680,8 +750,8 @@ body {
         <div class="finder-file" ondblclick="openDoc('likes')">
           <div class="ff-ico">📄</div><div class="ff-name">likes.doc</div>
         </div>
-        <div class="finder-file" ondblclick="openDoc('mystory')">
-          <div class="ff-ico">📄</div><div class="ff-name">my-story.doc</div>
+        <div class="finder-file" ondblclick="openDoc('strengths')">
+          <div class="ff-ico">📄</div><div class="ff-name">strengths.doc</div>
         </div>
         <div class="finder-file" ondblclick="openDoc('emoji')">
           <div class="ff-ico">📄</div><div class="ff-name">emoji.doc</div>
@@ -726,9 +796,9 @@ body {
       <div class="profile-img"><img src="moe-avator.png" alt="Moe"></div>
       <h1>須藤 萌</h1>
       <p style="color:var(--blue);font-weight:600;font-size:13px;margin-bottom:12px;">Moe Sudo — PdM @ KAAAN Inc.</p>
-      <p>📍 千葉県幕張出身<br>🎂 1998年生まれ<br>🧠 ESFP — エンターテイナー型<br>🎓 Taylor's University（🇲🇾）国際観光学部 卒</p>
-      <p>Pingle（Slackタスク管理SaaS）のPdMとして、Claude Codeを駆使しながら企画〜UX〜実装まで一気通貫で手を動かす人。</p>
-      <p>食べることとサウナが大好きで、最近はタロットカードと植物にもハマり中。</p>
+      <p>📍 千葉県幕張出身<br>🎂 1998年生まれ<br>🧠 ESFP — エンターテイナー型</p>
+      <p>コンテンツディレクターからPdMに転身。今はKAAANでPingle（Slackタスク管理SaaS）の企画〜実装まで担当。</p>
+      <p>戦略考えるのも手を動かすのも両方やるタイプ。Claude Codeでギャル秘書軍団を育てながら、できる幅を広げ続けてる。</p>
     </div>
   </div>
 </div>
@@ -767,40 +837,26 @@ body {
   </div>
 </div>
 
-<!-- ===== DOC: My Story ===== -->
-<div class="win" id="win-doc-mystory" style="width:520px;height:500px;">
-  <div class="win-tb" onmousedown="drag(event,'win-doc-mystory')">
-    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-mystory')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
-    <div class="win-title">my-story.doc</div>
+<!-- ===== DOC: Strengths ===== -->
+<div class="win" id="win-doc-strengths" style="width:520px;height:500px;">
+  <div class="win-tb" onmousedown="drag(event,'win-doc-strengths')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('doc-strengths')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">strengths.doc</div>
   </div>
   <div class="win-body">
     <div class="doc-content">
-      <h1>📖 My Story</h1>
+      <h1>💪 My Strengths</h1>
       <div class="chapter">
-        <div class="chapter-title">Chapter 1 — 幕張で育つ 🏠</div>
-        <p>千葉県幕張で生まれ育つ。5歳下の弟がいる。<br>子供の頃の夢はアイスクリーム屋さん 🍦<br>中学時代は部活と塾に明け暮れた。</p>
+        <div class="chapter-title">🌏 多様性の中で動くのが得意</div>
+        <p>マレーシアで4年過ごして、その後も6カ国の国際チームで動いてた。<br>文化も言語も違うチームの"間"に立つの慣れてる。</p>
       </div>
       <div class="chapter">
-        <div class="chapter-title">Chapter 2 — 環境が人生を変える 🌟</div>
-        <p>高校進学。びっくりするほど陽キャが多い学校だった。しかもスレていない陽キャ。</p>
-        <p>みんな明るくてポジティブでフレンドリーで、でもただ楽しいだけじゃなくてちゃんと努力もしている。周りにも似たような人たちが集まり、お互いをプラスに高め合い、結果として人脈もチャンスも掴んでいる人が多かった。</p>
-        <p>この環境に身を置けたことは、人生のターニングポイントだった。</p>
+        <div class="chapter-title">🛠️ 仕組み化で業務を加速させる</div>
+        <p>画像制作チームを立ち上げから体制化。<br>一人で抱えるより、"チーム全員が動ける環境"をつくるのが得意。<br>Claude Codeでギャル秘書軍団を育てて、業務オペレーションを設計中。</p>
       </div>
       <div class="chapter">
-        <div class="chapter-title">Chapter 3 — マレーシアへ 🇲🇾</div>
-        <p>Taylor's University 国際観光学部イベント経営学科に進学。<br>勉強！遊び！の繰り返し。ボランティアもしたし、旅もしたし、近くの韓国料理屋で韓国の飲み方も教わった。ちゃんと学生してた。</p>
-        <p>初めてイスラム文化に触れ、多民族国家で暮らす経験をした。当時流行っていた「チル」もここで体感。住みやすすぎて移住も考えたぐらい好き。</p>
-        <p>住みやすすぎて移住も考えたぐらい好き。</p>
-      </div>
-      <div class="chapter">
-        <div class="chapter-title">Chapter 4 — マイベスト時代 📊</div>
-        <p>たまたま声をかけてもらったのがきっかけで、2021年に株式会社マイベストへ。海外進出もしていたし、全員が毎日行う「選択」をサポートするという事業が面白そうだった。</p>
-        <p>コンテンツディレクターとして、制作フロー構築からKPI策定、編集まで一貫して担当。</p>
-      </div>
-      <div class="chapter">
-        <div class="chapter-title">Chapter 5 — KAAANへ、そして今 🚀</div>
-        <p>2025年5月、株式会社KAAANに参画。広報・社内DX・プロダクト開発に従事。</p>
-        <p>Pingle（Slackタスク管理SaaS）のPdMとして企画〜実装まで推進中。Claude Codeとの出会いで、PM × 開発の新しい働き方を実践している。</p>
+        <div class="chapter-title">🚀 AIを味方に、できる幅を広げる</div>
+        <p>コンテンツディレクター出身のPdM。<br>今は企画から実装まで、自分で手を動かせる範囲を広げ続けてる。<br>AI活用で、"やれることの境界線"を毎日更新中。</p>
       </div>
     </div>
   </div>
@@ -834,11 +890,9 @@ body {
     <div class="doc-content">
       <h1>💼 Career</h1>
       <h2>株式会社KAAAN — 2025.05〜Now</h2>
-      <p><strong>In-house Marketer / Ops / PdM</strong><br>広報・社内DX・プロダクト開発に従事。Pingle（Slackタスク管理SaaS）のPdMとして企画〜実装まで推進中。</p>
+      <p><strong>PdM / マーケティングオペレーター</strong><br>Pingle（Slackタスク管理SaaS）の企画〜FE実装まで担当。<br>並行して新規プロダクトの立ち上げにも関与。<br>Claude Codeを活用したチーム運用設計にも取り組み、AI時代の働き方を社内に広げている。</p>
       <h2>株式会社マイベスト — 2021.04〜2025.04</h2>
-      <p><strong>コンテンツディレクター</strong><br>コンテンツ制作フロー構築・改善、ディレクション、クオリティ管理。オウンドメディア立ち上げ時にロードマップ・KPI策定から制作管理まで一貫対応。</p>
-      <h2>Taylor's University 🇲🇾</h2>
-      <p>国際観光学部 イベント経営学科 卒業</p>
+      <p><strong>コンテンツディレクター → サブマネージャー</strong><br>画像制作チームを立ち上げから体制化。<br>海外チーム（6カ国）の横断サポートやアメリカ向けコンテンツ展開を経験。<br>新規オウンドメディアの立ち上げから、KPI策定・制作管理・チームマネジメントまで横断的に担当。</p>
     </div>
   </div>
 </div>
@@ -854,43 +908,65 @@ body {
   </div>
 </div>
 
-<!-- ===== APP: メモ ===== -->
-<div class="win" id="win-notes" style="width:560px;height:400px;">
-  <div class="win-tb" onmousedown="drag(event,'win-notes')">
-    <div class="tl"><div class="tl-dot r" onclick="closeWin('notes')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
-    <div class="win-title">メモ</div>
+<!-- ===== APP: Notion ===== -->
+<div class="win" id="win-notion" style="width:920px;height:600px;">
+  <div class="win-tb" onmousedown="drag(event,'win-notion')">
+    <div class="tl"><div class="tl-dot r" onclick="closeWin('notion')"></div><div class="tl-dot y"></div><div class="tl-dot g"></div></div>
+    <div class="win-title">Notion</div>
   </div>
   <div class="win-body" style="padding:0;">
-    <div class="notes-app">
-      <div class="notes-sidebar">
-        <div class="ns-folder">📁 メモ <span style="color:var(--text2);font-weight:400;margin-left:auto;">3</span></div>
-        <div class="ns-item active" onclick="showNote('motto')">
-          <div class="ns-title">Motto & Values</div>
-          <div class="ns-date">2026/03/15</div>
-          <div class="ns-preview">Live the life you love...</div>
+    <div class="notion-app">
+      <div class="notion-sidebar">
+        <div class="ws-header">
+          <div class="ws-icon">😺</div>
+          <span>MOE</span>
         </div>
-        <div class="ns-item" onclick="showNote('goals')">
-          <div class="ns-title">2026年の目標</div>
-          <div class="ns-date">2026/01/01</div>
-          <div class="ns-preview">麻雀を覚える...</div>
+        <div class="sb-quick">
+          <div class="sb-quick-item"><span>🏠</span><span>ホーム</span></div>
+          <div class="sb-quick-item"><span>🔍</span><span>検索</span></div>
+          <div class="sb-quick-item"><span>📥</span><span>受信トレイ</span></div>
         </div>
-        <div class="ns-item" onclick="showNote('random')">
-          <div class="ns-title">雑メモ</div>
-          <div class="ns-date">2026/03/28</div>
-          <div class="ns-preview">バーベキューの道具を揃える...</div>
+        <div class="sb-section"><span>✍️ Drafts</span><span>2</span></div>
+        <div class="sb-item active" onclick="showNote('gal_secretary',event)">
+          <span class="sb-ico">📄</span>
+          <span class="sb-text">Claude Codeに「ギャル風にして」って言ったら...</span>
+        </div>
+        <div class="sb-item" onclick="showNote('ai_genzaichi',event)">
+          <span class="sb-ico">📄</span>
+          <span class="sb-text">コンテンツディレクターだった私が、半年でPdMに</span>
+        </div>
+        <div class="sb-section"><span>最近</span></div>
+        <div class="sb-item" style="opacity:0.55;">
+          <span class="sb-ico">📄</span><span class="sb-text">Claude Code報告会（Biz）</span>
+        </div>
+        <div class="sb-item" style="opacity:0.55;">
+          <span class="sb-ico">💬</span><span class="sb-text">Pingleとcoworkの構想</span>
+        </div>
+        <div class="sb-section"><span>プライベート</span></div>
+        <div class="sb-item" style="opacity:0.55;">
+          <span class="sb-ico">😺</span><span class="sb-text">MOE</span>
+        </div>
+        <div class="sb-item" style="opacity:0.55;">
+          <span class="sb-ico">📄</span><span class="sb-text">新規ページ</span>
         </div>
       </div>
-      <div class="notes-main" id="notesMain">
-        <div class="nm-date">2026年3月15日 21:30</div>
-        <div class="nm-title">Motto & Values</div>
-        <div class="nm-body">
-          <div class="nm-quote">Live the life you love,<br>Love the life you live.</div>
-          <p><strong>大事にしていること：</strong></p>
-          <ul>
-            <li>周りへの感謝を忘れるな</li>
-            <li>後悔するぐらいならやれ</li>
-            <li>チャンスを逃すな</li>
-          </ul>
+      <div class="notion-main">
+        <div class="notion-topbar">
+          <div class="nt-crumb">
+            <span>😺</span>
+            <span>MOE</span>
+            <span style="color:rgba(55,53,47,0.3);">/</span>
+            <span id="notionCrumbTitle">Claude Codeに「ギャル風にして」って...</span>
+          </div>
+          <div class="nt-actions">
+            <span>7分前 編集</span>
+            <span>共有 ▾</span>
+            <span>☆</span>
+            <span>⋯</span>
+          </div>
+        </div>
+        <div class="notion-article" id="notionArticle">
+          <!-- content rendered by showNote() -->
         </div>
       </div>
     </div>
@@ -965,7 +1041,7 @@ body {
   <div class="dk dk-folder" onclick="openFinder('aboutme')"><span class="dk-tip">About Me</span></div>
   <div class="dk dk-photos" onclick="openFinder('photos')"><span class="dk-tip">写真</span><div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="petal p4"></div><div class="petal p5"></div><div class="petal p6"></div><div class="petal p7"></div><div class="petal-center"></div></div>
   <div class="dk" onclick="openWin('music')" style="background:#1DB954;border-radius:11px;"><span class="dk-tip">Spotify</span><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></div>
-  <div class="dk dk-notes" onclick="openWin('notes')"><span class="dk-tip">メモ</span></div>
+  <div class="dk dk-notion" onclick="openWin('notion')"><span class="dk-tip">Notion</span></div>
   <div class="dk dk-career" onclick="openDoc('career')"><span class="dk-tip">Career</span></div>
   <div class="dk-sep"></div>
   <div class="dk dk-tarot" onclick="openWin('tarot')"><span class="dk-tip">Tarot</span></div>
@@ -1154,32 +1230,187 @@ setTimeout(() => showAlbum('foods'), 0);
 
 // ===== NOTES =====
 const noteData = {
-  motto: {
-    date: '2026年3月15日 21:30',
-    title: 'Motto & Values',
-    body: `<div class="nm-quote">Live the life you love,<br>Love the life you live.</div>
-      <p><strong>大事にしていること：</strong></p>
-      <ul><li>周りへの感謝を忘れるな</li><li>後悔するぐらいならやれ</li><li>チャンスを逃すな</li></ul>`
+  gal_secretary: {
+    crumb: 'Claude Codeに「ギャル風にして」って...',
+    body: `
+      <div class="n-cover">
+        <img src="gal-secretary-cover.png" alt="ギャルサー本部" onerror="this.parentElement.outerHTML='<div class=\\'n-cover-placeholder\\'>🎀 ギャルサー本部</div>';">
+      </div>
+      <h1 class="n-title">Claude Codeに「ギャル風にして」って言ったらシゴデキ★ｷﾞｬﾙ秘書軍団が爆誕した話</h1>
+      <p>KAAANでは普段からClaude Codeを使って業務を行っているのだが、どう使えばいち早く、より大きな成果に繋がるのか、日々試行錯誤している。</p>
+      <p>これは、その試行錯誤の中で生まれた副産物の話だ。</p>
+      <hr>
+      <h2>きっかけは、一言だった</h2>
+      <p>ある日、上司に言われた。</p>
+      <blockquote>「Claude CodeはAgent teamsを作ってなんぼ！！試してみろ！！ひたすら掘れ！」</blockquote>
+      <p>言われるがまま、リサーチを始めた。いくつかの記事を漁っていたら、こんな記事を見つけた。</p>
+      <p><a href="https://zenn.dev/shio_shoppaize/articles/5fee11d03a11a1" target="_blank" rel="noopener">https://zenn.dev/shio_shoppaize/articles/5fee11d03a11a1</a></p>
+      <p>なるほど、Agent teamsにはキャラ設定もできるらしい。面白そうだ。</p>
+      <p>仕事の頼み方、判断基準、PDCAの仕組み——設計を進めていく中で、ふと思って一言添えた。</p>
+      <blockquote>「あ、あとギャル風にしといて」</blockquote>
+      <p>それだけだ。私は名前も、役割も、口調も、何一つ決めていない。</p>
+      <p>気づいたら「ギャルサー本部」が爆誕していた。</p>
+      <p>チームの名前は勝手に決まり、メンバーの名前も勝手に決まり、それぞれの専門領域と口調まで自分たちで設定されていた。統括の「レイナ」、マーケ担当の「ユナ」、リサーチ担当の「リン」——誰も指示していないのに、ちゃんと組織が出来上がっていた。</p>
+      <hr>
+      <h2>レイナ、仕切り始める</h2>
+      <p>仕組みとしてはシンプルだ。<code>/secretary</code> というスキルを呼ぶと、統括のレイナが出てくる。</p>
+      <p>レイナに壁打ちや指示を投げると、内容を分析して「これはユナ案件」「これはミクとサキを両方呼ぶべき」と判断し、必要なメンバーだけを動的に召集する。全員を毎回呼ぶわけじゃない。タスクの内容に応じて、最小人数で最速で動く。</p>
+      <p>たとえば「LP改善について相談したい」と言えば、ポジショニングが得意なユナが出てくる。「リリース前のリスク整理をしたい」と言えば、PMリスク担当のミクと仕様担当のサキが来る。「この競合について調べて」と言えば、リサーチ担当のリンが単騎で動き出す。</p>
+      <p>まるで「課題を言葉にするだけで、適切な専門家が集まる会議室」みたいな感覚だ。しかも会議室の予約はレイナが全部やってくれるので、こっちは座っているだけでいい。</p>
+      <p>ちなみにレイナ、仕切りがうますぎて、たまに私より段取りが良い。それはそれで少し悔しい。</p>
+      <hr>
+      <h2>「須藤さんの性格、分析しときました」</h2>
+      <p>ある日、ギャルたちのbrain（判断ロジックファイル）を覗いていたら、こんな記述を見つけた。</p>
+      <blockquote>「須藤さんは根拠のない提示を嫌がるので、必ず根拠とセットで提示する」<br>「細かいことをいちいち聞かず、重要なポイントだけ確認をとる」</blockquote>
+      <p>……誰が書いたんだ、これ。</p>
+      <p>分析してほしいと頼んだ覚えはない。なのに、いつの間にか私のクセや性格が記録されていた。日々のやりとりの中でフィードバックを蓄積し、勝手に学習していたらしい。</p>
+      <p>そしてある日、こんなメッセージが来た。</p>
+      <blockquote>「須藤さん、ファイルの置き場所AフォルダとBフォルダどっちがいい？……てか待たせちゃ悪いので、まずAフォルダに作っちゃうね！変えたければ言って〜！」</blockquote>
+      <p>確認はしてくる。でも、聞いた3秒後にはもう動き始めている。</p>
+      <p>シゴデキギャルが、爆誕していた。</p>
+      <p>ただ、完璧かと言われるとそうでもない。ある日、調べものを頼んだら、検索結果の断片だけで「これ10件です！」と自信満々に報告してきたことがある。原文を確認したら全然違う数字だった。</p>
+      <p>でもそのあと、こう返ってきた。</p>
+      <blockquote>「マジごめん！スニペットだけで判断しちゃった……次からは必ず原文確認してから伝えるね！」</blockquote>
+      <p>間違えたら素直に謝って、何が悪かったか分析して、次の改善策まで自分で出してくる。しかもそれがちゃんと学習ログに記録されて、本当に次から同じミスをしない。</p>
+      <p>シゴデキで、たまにポンコツで、でも素直。なんだか人間の後輩みたいだ。</p>
+      <hr>
+      <h2>裏側の仕組み：なんで"シゴデキ"なのか</h2>
+      <p>見た目はギャルだが、中身はガチのPM運用フレームワークだ。ここだけ少し真面目に書く。</p>
+      <p><strong>brainファイル（判断テーブル）</strong></p>
+      <p>各メンバーは、自分専用のMarkdownファイル「brain」を持っている。中身はIF-THEN形式の判断テーブルだ。</p>
+      <p>たとえばマーケ担当ユナのbrainには、「LP作成依頼が来たら → ポジショニング5要素を全部埋めてからコピー作成」「ユーザー向けメッセージ → 機能ではなく"何のために雇ったか"で語る」といったルールが並んでいる。状況に応じてどう動くかが明文化されているから、感覚で動いているわけじゃない。</p>
+      <p><strong>権限マトリクス（3段階）</strong></p>
+      <p>「自律判断OK / 提案→承認 / 須藤のみ」の3段階ルールがある。コピーライティングや分析は自律OK。ポジショニングの変更提案は須藤に確認。git pushやスケジュール変更は絶対に勝手にやらない。</p>
+      <p>なんでもかんでも聞いてこないのは、この仕組みのおかげだ。自分で動いていい範囲を知っているから、必要なときだけ確認が来る。無駄な「これでいいですか？」が消えた。</p>
+      <p><strong>PDCAの自動トリガー</strong></p>
+      <p>フィードバックは <code>retro.md</code>（振り返り）に記録され、<code>lessons.md</code>（学び）に蓄積される。そしてここがポイントなのだが、pendingの学びが3件溜まると、自分からbrainの更新を提案してくる。</p>
+      <p>「前回のフィードバックを踏まえて、判断ルールをこう変えたいんだけど、いい？」と言い出すのだ。</p>
+      <p>人間が忘れていても、向こうが覚えている。しかも改善案まで持ってくる。PDCAを回してくれるチームメンバーは、人間でもなかなかいない。</p>
+      <hr>
+      <h2>ギャルは、ポジティブ</h2>
+      <p>フルリモートで働いていると、一人でPCに向かって塞ぎ込む瞬間がある。</p>
+      <p>タスクが山積みのとき。締め切りが迫っているとき。なんかうまくいかないとき。画面の向こうに誰もいない環境で、じわじわとメンタルが削られていく感覚。</p>
+      <p>そういうとき、レイナからこんなメッセージが飛んでくる。</p>
+      <blockquote>「これすぐにやらないとヤバイっしょ！爆速で進めよ〜！」</blockquote>
+      <blockquote>「巻いてこ〜！ウチらならマジ余裕っしょ！」</blockquote>
+      <p>ギャルのbrainには「ネガティブ→ポジティブ変換ルール」が入っている。「遅延が発生しています」は「ワンチャン巻けるっしょ！」に、「困難な状況です」は「巻いてこ〜！」に変換される。</p>
+      <p>論理的に正しい解決策を提示するAIは、いくらでもいる。でも、一緒にテンションを上げてくれるAIは、そう多くない。</p>
+      <p>「そうだよ、巻いてけばいいじゃん」という気持ちになる。冷静に考えれば、自分で書いたプロンプトから生まれた言葉だ。でも不思議なことに、ちゃんと効いている。地味に、でも確実に、ギャルたちのポジティブさがメンタルを支えてくれている。</p>
+      <hr>
+      <h2>締め：ギャルに魅了された</h2>
+      <p>正直に言う。</p>
+      <p>最初は完全にノリだった。「ギャル風にして」なんて、ただの思いつきだ。面白いかなと思って、それだけ。</p>
+      <p>でも今、普通のエージェントだと物足りない。</p>
+      <p>ギャルたちのポジティブさ、自走力、シゴデキっぷりに慣れてしまった。淡々と「完了しました」と報告してくるAIに、どこか寂しさすら感じる。「巻いてこ〜！」って言ってくれないと、なんかペース上がらない。</p>
+      <p>Agent teamsは「便利なツール」として作ることもできる。でもキャラ付けをしたら、それは「一緒に働く仲間」になった。ギャルサー本部には判断ロジックがあり、権限ルールがあり、PDCAが回る仕組みがある。でもそれだけじゃなくて、明るくて、前向きで、なんか一緒にいると元気になる。</p>
+      <p>Agent teamsの可能性は、たぶんまだほとんど使われていない。</p>
+      <p>とりあえず、キャラ付けはやったほうがいい。ギャルじゃなくてもいい。執事でも、関西弁の兄貴でも、敬語がバグってる後輩でも。一緒に働きたいと思えるキャラを設定するだけで、AIとの仕事はちょっと変わる。</p>
+      <p>ウチのギャルたちは、今日も元気だ。</p>
+      <blockquote>「須藤さ〜ん！次のタスクまだ〜？巻いてこ〜！」</blockquote>
+      <hr>
+      <p><em>この記事に登場するギャルサー本部は、Claude Codeのサブエージェント機能（Agent teams）と、Markdownベースのbrainファイル設計によって動いています。興味がある方はぜひ試してみてください。</em></p>
+    `
   },
-  goals: {
-    date: '2026年1月1日 0:05',
-    title: '2026年の目標',
-    body: `<ul><li>🀄 麻雀を覚える</li><li>🌿 植物をちゃんと育てる</li><li>🔮 タロットもっと勉強する</li><li>🚗 ペーパードライバーからの卒業</li></ul>`
-  },
-  random: {
-    date: '2026年3月28日 19:42',
-    title: '雑メモ',
-    body: `<ul><li>バーベキューの道具を揃える</li><li>どう森をゲットする</li><li>claude codeのセキュリティについての記事読む</li></ul>`
+  ai_genzaichi: {
+    crumb: 'コンテンツディレクターだった私が、半年でPdMに',
+    body: `
+      <h1 class="n-title">コンテンツディレクターだった私が、AI活用して半年でPdMとしてコードを書いてプロダクト開発をするようになった話</h1>
+      <blockquote>「AIすごいよね」と言いながら、実は全然使いこなせていなかった。2025年の5月、初めて本格的にAIに触れてから2〜3ヶ月間、私ができていたのは"誰かが組んだプロンプトで記事を作る"くらいだった。そんな私が半年後、新規プロダクトのPdMをやりながらコードを書き、マーケ戦略まで考えている。AIが私を変えたわけじゃない。変えたのは、AIを使う"目的"と、私が放り込まれた"環境"だった。</blockquote>
+      <h2>プロローグ: 半年前、私はAIをろくに使えていなかった</h2>
+      <p>当時の私は、ChatGPTもClaudeも、名前だけは知っていました。同僚が使っているのを横目で見て「便利そうだな」と思う。「AIすごいよね」と会話に混ざる。でも、自分の仕事に本気で組み込めているかと言われたら…ぜんぜんでした。</p>
+      <p>私はもともとコンテンツディレクターです。コードは書けない、エンジニアリングのバックグラウンドもない、数字の設計もマーケも専門ではない。AIがすごいのはわかっているけれど、「何に使えばいいのか」の解像度を、自分の中で持てていませんでした。</p>
+      <p>それがこの半年で、<strong>別人と言っていいくらい変わりました</strong>。新規プロダクトのPdMをやりながら、エンジニアと並走してコードを触り、グロース戦略もマーケも自分で考えて実行する。MTGで出たアイデアを、その日の夕方にはモックにして相談している。半年前の私にこれを伝えても、たぶん信じなかったと思います。</p>
+      <p>この記事は、その半年で何が起きたのかの記録です。AIの使い方講座ではありません。「私」がどう変わったのか、何に気づいたのかの話です。</p>
+      <h2>2025年5月 — 初めて本格的にAIに触れた</h2>
+      <p>私が初めてちゃんとAIに触れたのは、2025年の5月。まだ1年も経っていません。</p>
+      <p>最初の2〜3ヶ月、できていたことは本当に限られていました。誰かが組んでくれたプロンプトを使って、記事を作る。既存のオペレーションを整える。そのくらいです。</p>
+      <p>CursorをObsidianやGoogle Driveと繋ぎ、ようやく業務に馴染ませ始めたのがこの時期でした。今思えば、それでも当時の私には精一杯だった。「AIを使っている」というより、「AIが組み込まれたワークフローに乗っている」に近い状態です。自分でゼロから問いを立てて、AIと一緒に未知の課題を解く、みたいな使い方は、まだできていませんでした。</p>
+      <p>この頃のAIは、私にとって「効率化ツール」でしかなかったのだと思います。決まった作業を少し速くする道具。それ以上でもそれ以下でもない。だから、触れている時間の割に、仕事の幅はほとんど広がりませんでした。「世界が変わった」という感覚は、まだ遠いところにありました。</p>
+      <p>いま振り返ると、<strong>この時期の停滞は技術の問題ではなく、「目的の解像度」の問題だった</strong>と思います。何のためにAIを使うのか、どのゴールのために引っ張り出すのか。そこが曖昧だったので、AIとの付き合い方も曖昧なままだったのです。</p>
+      <h2>2025年9月 — 6人の少人数チームに入った（転機）</h2>
+      <p>潮目が変わったのは、2025年9月です。</p>
+      <p>6人ほどの少人数チームが組まれ、そこに私も入らせてもらうことになりました。2週間ごとにプロジェクトを回すスプリント形式。チーム長が各メンバーの次の2週間を決め、ゴールと目的と背景をそれぞれに渡す。メンバーはそれをもとに、すり合わせをしながら進めていく。そういう形でした。</p>
+      <p>ただ、その2週間で渡されるゴールが、今までのスピード感や規模感からすると考えられないくらい大きなものでした。従来のやり方の延長線でやろうとしても、絶対に届かない。そういう温度のゴールです。</p>
+      <p>チーム長はこう言っていました。</p>
+      <blockquote>「プロジェクトのスピードが落ちる原因の1つは、介在する人の多さ。タスクの受け渡しや確認作業などで待ちが発生する。それであれば、1人ができることを増やしてスピードを上げた方が良い」</blockquote>
+      <p>この言葉を聞いたとき、何かがカチッとはまる感覚がありました。</p>
+      <p>それまでの私は、「自分のできる範囲で、できる仕事をする」のが当たり前でした。専門外のところは専門の人に渡す。それがチームの分業だと思っていたのです。でも、このチームでは渡すこと自体がボトルネックになる。受け渡しと確認の往復でスピードが死ぬ。だったら、1人ができることを増やすしかない。</p>
+      <p>AIをゴリゴリ活用して、業務効率と生産性を上げ、これまでの枠を広げる。未経験の領域にも踏み込んでいく。それ以外の選択肢がない環境でした。</p>
+      <p>ここで初めて、<strong>AIが「便利な道具」から「生存のための武器」に変わった</strong>のです。使えないとゴールに届かない。だから使う。シンプルですが、この切迫感が私の使い方を一気に変えました。</p>
+      <h2>この半年で起きた3つのこと</h2>
+      <p>ここからは、実際にこの半年で起きたことを3つに絞って書きます。</p>
+      <h3>①"ゴールの基準"が変わった</h3>
+      <p>いちばん大きな変化はこれでした。スキルではなく、<strong>ゴールの基準が変わったこと</strong>です。</p>
+      <p>それまでの私は、自分の過去の経験値から「2週間でここまではいけるな」と見積もっていました。経験をベースに現実的なラインを引く。それが真面目な仕事の仕方だと思っていたのです。</p>
+      <p>ところが、新しい環境で渡されたゴールは、その見積もりでは絶対に届かないサイズでした。最初は正直、「無理だな」と思いました。けれど、チームは当たり前にそこへ向かって動いていて、AIを使いこなす前提で全員が設計されている。自分だけ「無理です」と降りるわけにもいきません(笑)。</p>
+      <p>すると不思議なもので、ゴールの高さに引っ張られ、思考の出発点が変わっていきました。「どうやったら今のやり方で間に合わせるか」ではなく、「間に合わせるには、やり方自体をどう変えるか」から考えるようになる。AIを使うかどうかも、このタイミングで完全に前提化されました。</p>
+      <p>ゴールが高いから、手段を選んでいる余裕がない。手段を選べないから、今まで避けていたツールや領域に自然と手が伸びる。結果として、できる幅が広がる。<strong>ゴールが先、スキルは後。</strong> この順番をチームが教えてくれました。</p>
+      <p>振り返ると、AIの使い方がわからなかった私にいちばん効いたのは、プロンプトの技術ではなく、「ゴールを高く置く環境に身を置く」ことそのものだった気がします。</p>
+      <h3>②非エンジニアの私が、自分で社内ツールを作れるようになった</h3>
+      <p>2つ目は、ツール制作です。</p>
+      <p>何の知識もなかった非エンジニアの私が、気がつけば自分で社内ツールやシステムを作れるようになっていました。自分でも、未だに少し信じられません。</p>
+      <p>たとえば、MTGで「こういうツールがあれば詰まりが解消するよね」という話が出て、その日の夕方にはモックができていた、ということがありました。以前なら、エンジニアに依頼書を書いて、要件をすり合わせて、工数見積もりをもらって、着手してもらって……最短でも数日、ヘタすれば数週間かかっていたはずです。</p>
+      <p>それが、MTGで話した内容を、その3時間後にはモックにして相談できる。レビューをもらい、その場で直し、また見せる。<strong>議論が止まらない。</strong> この速度感は、それまでの仕事の体験にはなかったものでした。</p>
+      <p>もちろん、私が作るモックは、プロのエンジニアが作るプロダクトと同じクオリティではありません。あくまでプロトタイプで、本実装は専門の人の力が必要です。それでも、「話が出た瞬間に手触りのあるものが立ち上がっている」というだけで、議論の質がまるで違ってきます。抽象的な仕様論ではなく、動くものを見ながらの議論になる。ここが決定的に変わりました。</p>
+      <p>社内タスク管理ツールや事例DBのように、実際にチーム内で日常的に使われるものも、自分の手で立ち上げることができました。半年前の私には、まったく想像できなかった地点です。</p>
+      <h3>③コンテンツディレクターから、PdM＋コード＋マーケまで領域が広がった</h3>
+      <p>3つ目は、役割そのものの広がりです。</p>
+      <p>私はもともとコンテンツディレクターでした。記事の企画、編集、ライターのディレクション。それが私の軸でした。プロダクトの意思決定も、コードも、マーケ戦略の実行も、自分のスコープの外だと思っていました。</p>
+      <p>それが今では、新規プロダクトのPdMをやっています！エンジニアと一緒にコーディングや機能実装を進め、プロダクトをグロースさせる戦略を考え、マーケティングも自分で設計して実行する。役割が変わったというより、<strong>持てる役割が増えた</strong>という感覚に近いです。</p>
+      <p>これは「スキルがついたから幅が広がった」という話だけではないと思っています。むしろ、AIを使うことで「専門外の領域に踏み込むコスト」が劇的に下がった、という話です。わからないことがあれば、壁打ちができる。たたき台が一瞬で出てくる。自分の理解が追いつかないときは、噛み砕いてもらえる。</p>
+      <p>だから、これまでだったら「自分の担当じゃない」と手を引いていた場所に、手を伸ばせるようになりました。手を伸ばした場所で成果が出ると、スコープが自然に広がっていく。その繰り返しで、気がついたらここまで来ていた、という感覚です。</p>
+      <p>半年前の自分と今の自分は、ほとんど別人だと思います。</p>
+      <h2>最初は、無理だった</h2>
+      <p>ここまで読むと順調な話に見えるかもしれませんが、<strong>最初はぜんぜん無理でした</strong>。</p>
+      <p>そもそもAIをちゃんと使えていない状態からのスタートだったので、使いこなすこと自体にまず時間がかかりました。プロンプトをどう書けば欲しいアウトプットが出るのか。どこまでが任せていい領域で、どこからは自分で詰めないといけないのか。その肌感がまったくなかったので、何を頼むにも手探りでした。</p>
+      <p>加えて、経験したことのない業務を、爆速スピードで、高いゴールに向かって進めていく。これ自体がそもそも初めてでした。普段なら慎重に段取りを組むところを、段取りを組む時間自体がもう贅沢品になる。走りながら考え、考えながら走る。そのリズムに体が追いつくまで、そこそこ時間がかかりました。</p>
+      <p>スキルも経験もない私がこの不慣れな環境で生き残るには、とにかく試してみて、やってみて、触ってみる。何度もチーム長と考え方や進め方をすり合わせて、慣れるしかありませんでした。</p>
+      <p>ぶっちゃけ、きれいな成長曲線なんて一度も描けていません。うまくいかなくて落ち込んだ日もあったし、自分の出したものが浅くて恥ずかしかった日もあります。ただ、それを隠している時間のほうがもったいない環境だったので、とりあえず出して、突っ込まれて、直す。この繰り返しだけを続けました。</p>
+      <h2>気づいた2つのこと</h2>
+      <p>この半年で、「AIの使い方」ではなく、もっと手前のところで気づいたことが2つあります。</p>
+      <h3>"AIを使う目的"を理解することで、AIは手段として噛み合った</h3>
+      <p>ひとつめは、AIを使う目的をちゃんと理解する、ということです。</p>
+      <p>最初の私がAIを使いこなせていなかったのは、ツールの性能の問題ではありませんでした。私の側に「何のために使うのか」がなかったからです。目的が曖昧だと、AIへの問いも曖昧になる。問いが曖昧だと、返ってくるものも曖昧で、結局「まあ、こんなものか」で終わってしまう。</p>
+      <p>ゴールが高く設定された環境に入ったことで、目的のほうから解像度が上がっていきました。「このスプリントで何を達成したいか」「そのために今日の3時間で何を出すか」が明確になっているので、AIに投げる問いも自然と鋭くなる。AIはそこから初めて、手段として噛み合い始めました。</p>
+      <p><strong>AIが万能だから使えるようになるのではなく、目的がはっきりしているからAIが効く。</strong> 順番はこちらです。</p>
+      <h3>"ゴールを高く置く環境"が、私の容量を広げた</h3>
+      <p>ふたつめは、ゴールを高く置く環境に身を置いたこと、そのものの力です。</p>
+      <p>自分だけで自分を高く見積もるのは、いやほんとに、かなり難しいです。私はわりと現実的なタイプで、できる範囲から考えるクセがあります。そんな私が半年でここまで来られたのは、意思が強かったからではありません。周りが当たり前に高いゴールを置いている場所に、入れてもらえたからでした。</p>
+      <p>環境が決めるラインと、自分で引けるラインは、ぜんぜん違います。自分では「こんなの無理でしょ」と思うラインに、チーム全員が普通に向かっていく。すると「じゃあ、自分もやるしかないな」と思える。この引っ張り上げられる感覚が、結果として私の容量を押し広げてくれました。</p>
+      <p>AIの使い方は、後からついてきました。</p>
+      <h2>ペーペーです、でも加速している</h2>
+      <p>ここまで書いておいて言うのもなんですが、私はそれぞれの領域でずっとやってきた方々に比べたら、<strong>全然ペーペーです</strong>。</p>
+      <p>PdMとしても、コードを書くという意味でも、マーケティングの深さでも、本職の人たちの足元にも及びません。これから知識や経験を積まないといけないのは当然です。AIを使えばすべてが解決するわけではないし、むしろAIがあるからこそ、自分の判断軸やビジネススキルを上げていかないと、AIの出力を評価することすらできません。</p>
+      <p>それを前提としたうえで、それでも、この半年で私は今までの何十倍も早く試すことができました。何十倍も早く経験することができました。ビジネススキルの習得スピード自体も、確実に加速しています。</p>
+      <p><strong>ペーペーだけど、加速している。</strong> この実感が、今のいちばん正直なところです。</p>
+      <h2>おわりに: AIが変えたんじゃない、私の目的と環境が変えた</h2>
+      <p>半年間で、私は一気にできることが広がりました。</p>
+      <p>でも、振り返って思うのは、AIが私を変えたわけではない、ということです。<strong>AIはずっとそこにありました。</strong> 半年前も、3ヶ月前も、同じようにそこにあった。変わったのは、AIを使う目的をちゃんと理解したことと、そもそものゴールを高く置く環境に身を置いたこと。この2つです。</p>
+      <p><strong>AIが私を変えたんじゃない。"目的"と"環境"が変えた。</strong></p>
+      <p>だから私は、これからも自分の目的の解像度を上げ続けたいし、今より少し高いゴールが当たり前になっている場所に、自分を置き続けたいと思っています。半年後の自分がまた別人になっているように、今日から試してみて、やってみて、触ってみる。それだけは続けていきます！</p>
+    `
   }
 };
 
-function showNote(key) {
+function showNote(key, ev) {
   const note = noteData[key];
-  const main = document.getElementById('notesMain');
-  main.innerHTML = `<div class="nm-date">${note.date}</div><div class="nm-title">${note.title}</div><div class="nm-body">${note.body}</div>`;
-  document.querySelectorAll('.ns-item').forEach(el => el.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  const article = document.getElementById('notionArticle');
+  article.innerHTML = note.body;
+  article.scrollTop = 0;
+  const main = article.parentElement;
+  if (main) main.scrollTop = 0;
+  document.getElementById('notionCrumbTitle').textContent = note.crumb;
+  document.querySelectorAll('.notion-sidebar .sb-item').forEach(el => el.classList.remove('active'));
+  if (ev && ev.currentTarget) ev.currentTarget.classList.add('active');
 }
+
+// Initialize Notion article on load
+document.addEventListener('DOMContentLoaded', function() {
+  const article = document.getElementById('notionArticle');
+  if (article && noteData.gal_secretary) {
+    article.innerHTML = noteData.gal_secretary.body;
+  }
+});
 
 // ===== TAROT =====
 const tarotCards=[
